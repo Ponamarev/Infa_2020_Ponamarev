@@ -24,18 +24,23 @@ grey = (128, 128, 128)
 black = (0, 0, 0)
 white = (255, 255, 255)
 
-def eye(x, y, alphaX, alphaY): # FIX
-    ellipse(screen, (grey, alphaX * 400, alphaY * 200, alphaX * 200, alphaY * 200), 0)
+def eye(x, y, alphaX, alphaY):           # FIX
+    ellipse(screen, (white, alphaX * x, alphaY * y, alphaX * 20, alphaY * 17), 0)
+    ellipse(screen, (black, alphaX * x, alphaY * y, alphaX * 20, alphaY * 17), 1)
+    ciclle(screen, (black, alphaX * (x + 10), alphaY * (y + 10), alphaX * 20, alphaY * 17), 0)
 
 
-def rabbit_head(x, y, alphaX, alphaY):  # FIX
+def rabbit_head(x, y, alphaX, alphaY):   # FIX
     """
     рисует голову.
     """
-    #
+    #  Основа головы.
     ellipse(screen, (grey, alphaX * 400, alphaY * 200,  alphaX * 200, alphaY * 200), 0)
 
-    #
+    # Глаза.
+    eye(x, y, alphaX, alphaY)
+    eye(x, y, alphaX, alphaY)
+
 
 
 
