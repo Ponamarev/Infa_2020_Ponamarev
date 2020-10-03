@@ -30,12 +30,12 @@ def eye(x, y, alphaX, alphaY):           # FIX
     ciclle(screen, (black, alphaX * (x + 10), alphaY * (y + 10), alphaX * 20, alphaY * 17), 0)
 
 
-def rabbit_head(x, y, alphaX, alphaY):   # FIX
+def rabbit_head(x, y, alphaX, alphaY, screen):   # FIX
     """
     рисует голову.
     """
     #  Основа головы.
-    ellipse(screen, (grey, alphaX * 400, alphaY * 200,  alphaX * 200, alphaY * 200), 0)
+    ellipse(screen, grey, (alphaX * 400, alphaY * 200, alphaX * 200, alphaY * 200), 0)
 
     # Глаза.
     eye(x, y, alphaX, alphaY)
@@ -46,21 +46,21 @@ def rabbit_head(x, y, alphaX, alphaY):   # FIX
 
 
 
-def rabbit_body(x, y, alphaX, alphaY): # FIX
+def rabbit_body(x, y, alphaX, alphaY, screen): # FIX
     """
 
     """
     pass
 
 
-def rabbit_legs(x, y, alphaX, alphaY):  # FIX
+def rabbit_legs(x, y, alphaX, alphaY, screen):  # FIX
     """
 
     """
     pass
 
 
-def rabbit_somethings(x, y, alphaX, alphaY):  # FIX
+def rabbit_somethings(x, y, alphaX, alphaY, screen):  # FIX
     """
 
 
@@ -68,7 +68,7 @@ def rabbit_somethings(x, y, alphaX, alphaY):  # FIX
     pass
 
 
-def rabbit(x, y, alphaX, alphaY):
+def rabbit(x, y, width, height):
     """
     Рисует кролика.
 
@@ -82,15 +82,16 @@ def rabbit(x, y, alphaX, alphaY):
     # Коэфиценты для расширения линейных размеров по соотв. осям.
     # Они нужны, т к у меня есть возможность самому выбрать размер окна.
     alphaX = width / 1000
-    alphaY = height / 2000
+    alphaY = height / 900
 
-    rabbit_head(x, y, alphaX, alphaY)
-    rabbit_body(x, y, alphaX, alphaY)
-    rabbit_legs(x, y, alphaX, alphaY)
-    rabbit_somethings(x, y, alphaX, alphaY)
+    rabbit_head(x, y, alphaX, alphaY, screen)
+    ellipse(screen, (183, 0, 9), (630, 620, 64, 58), 0)
+    rabbit_body(x, y, alphaX, alphaY, screen)
+    rabbit_legs(x, y, alphaX, alphaY, screen)
+    rabbit_somethings(x, y, alphaX, alphaY, screen)
 
     # Подключаем настройки pygame.
     settings(30)
 
 
-rabbit(2, 434, 1000, 2000)
+rabbit(2, 434, 1000, 900)
