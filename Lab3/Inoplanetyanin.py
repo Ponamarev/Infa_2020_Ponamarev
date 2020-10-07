@@ -22,7 +22,22 @@ def Settings():
                 finished = True
 
 
-def Exs2_imgN17():
+def person():
+    pass
+
+def background():
+    pass
+
+
+def NLO():
+    pass
+
+
+def Clouds():
+    pass
+
+
+def Exs2_imgN17(x, y, alpha):
     #фон - трава, небо, луна.
     rect(screen, (15, 25, 50), (0, 0, 800, 480), 0)
     rect(screen, (30, 50, 20), (0, 480, 800, 1000), 0)
@@ -109,5 +124,5 @@ def Exs2_imgN17():
 
 
 
-Exs2_imgN17()
+Exs2_imgN17(0, 0, 1)
 Settings()
