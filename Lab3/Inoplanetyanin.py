@@ -25,71 +25,76 @@ def Settings():
                 finished = True
 
 
-def person():
+def person(x, y, Alpha, color_of_ino):
     """
     Рисует инопланетянина.
 
+    x, y координаты верхней левой точки прямоуголька, в котором лежит фигура
+    Alpha - коэфицент расширения
     :return: None
     """
     # Иночеловечек.
     # левое ухо.
-    ellipse(screen, color_of_ino, (480, 500, 27, 19), 0)
-    ellipse(screen, color_of_ino, (487, 514, 28, 13), 0)
-    ellipse(screen, color_of_ino, (498, 530, 15, 15), 0)
-    ellipse(screen, color_of_ino, (500, 540, 18, 15), 0)
+    ellipse(screen, color_of_ino, (Alpha * (480 + x - 460), Alpha * (500 + y - 490), Alpha * 27, Alpha * 19), 0)
+    ellipse(screen, color_of_ino, (Alpha * (487 + x - 460), Alpha * (514 + y - 480), Alpha * 28, Alpha * 13), 0)
+    ellipse(screen, color_of_ino, (Alpha * (498 + x - 460), Alpha * (530 + y - 480), Alpha * 15, Alpha * 15), 0)
+    ellipse(screen, color_of_ino, (Alpha * (500 + x - 460), Alpha * (540 + y - 480), Alpha * 18, Alpha * 15), 0)
 
     # правое ухо
-    ellipse(screen, color_of_ino, (560, 540, 25, 20), 0)
-    ellipse(screen, color_of_ino, (572, 530, 10, 11), 0)
-    ellipse(screen, color_of_ino, (560, 540, 13, 16), 0)
-    ellipse(screen, color_of_ino, (582, 513, 10, 24), 0)
-    ellipse(screen, color_of_ino, (590, 500, 25, 20), 0)
+    ellipse(screen, color_of_ino, (Alpha * (560 + x - 460), Alpha * (540 + y - 480), Alpha * 25, Alpha * 20), 0)
+    ellipse(screen, color_of_ino, (Alpha * (572 + x - 460), Alpha * (530 + y - 480), Alpha * 10, Alpha * 11), 0)
+    ellipse(screen, color_of_ino, (Alpha * (560 + x - 460), Alpha * (540 + y - 480), Alpha * 13, Alpha * 16), 0)
+    ellipse(screen, color_of_ino, (Alpha * (582 + x - 460), Alpha * (513 + y - 480), Alpha * 10, Alpha * 24), 0)
+    ellipse(screen, color_of_ino, (Alpha * (590 + x - 460), Alpha * (500 + y - 480), Alpha * 25, Alpha * 20), 0)
 
     # голова.
-    arc(screen, color_of_ino, (490, 550, 100, 30), 2 * pi, pi, 5)
-    arc(screen, color_of_ino, (490, 488, 90, 150), pi, 1.5 * pi, 5)
-    arc(screen, color_of_ino, (480, 488, 110, 150), 1.5 * pi, 2 * pi, 5)
-    ellipse(screen, color_of_ino, (490, 550, 100, 30), 0)
-    ellipse(screen, color_of_ino, (493, 560, 95, 30), 0)
-    ellipse(screen, color_of_ino, (495, 570, 90, 30), 0)
-    ellipse(screen, color_of_ino, (497, 580, 85, 30), 0)
-    ellipse(screen, color_of_ino, (500, 590, 80, 30), 0)
-    ellipse(screen, color_of_ino, (500, 570, 80, 60), 0)
-    ellipse(screen, color_of_ino, (510, 605, 50, 30), 0)
+    arc(screen, color_of_ino, (Alpha * (490 + x - 460), Alpha * (550 + y - 480),
+                               Alpha * 100, Alpha * 30), 2 * pi, pi, 5)
+    arc(screen, color_of_ino, (Alpha * (490 + x - 460), Alpha * (488 + y - 480),
+                               Alpha * 90, Alpha * 150), pi, 1.5 * pi, 5)
+    arc(screen, color_of_ino, (Alpha * (480 + x - 460), Alpha * (488 + y - 480),
+                               Alpha * 110, Alpha * 150), 1.5 * pi, 2 * pi, 5)
+    ellipse(screen, color_of_ino, (Alpha * (490 + x - 460), Alpha * (550 + y - 480), Alpha * 100, Alpha * 30), 0)
+    ellipse(screen, color_of_ino, (Alpha * (493 + x - 460), Alpha * (560 + y - 480), Alpha * 95, Alpha * 30), 0)
+    ellipse(screen, color_of_ino, (Alpha * (495 + x - 460), Alpha * (570 + y - 480), Alpha * 90, Alpha * 30), 0)
+    ellipse(screen, color_of_ino, (Alpha * (497 + x - 460), Alpha * (580 + y - 480), Alpha * 85, Alpha * 30), 0)
+    ellipse(screen, color_of_ino, (Alpha * (500 + x - 460), Alpha * (590 + y - 480), Alpha * 80, Alpha * 30), 0)
+    ellipse(screen, color_of_ino, (Alpha * (500 + x - 460), Alpha * (570 + y - 480), Alpha * 80, Alpha * 60), 0)
+    ellipse(screen, color_of_ino, (Alpha * (510 + x - 460), Alpha * (605 + y - 480), Alpha * 50, Alpha * 30), 0)
 
     # глаза.
-    circle(screen, (0, 0, 0), (520, 580), 12, 0)
-    circle(screen, (250, 250, 250), (525, 583), 3, 0)
+    circle(screen, (0, 0, 0), (int(Alpha * (520 + x - 460)), int(Alpha * (580 + y - 480))), int(Alpha * 12), 0)
+    circle(screen, (250, 250, 250), (int(Alpha * (525 + x - 460)),  int(Alpha * (583 + y - 480))), int(Alpha * 3), 0)
 
-    circle(screen, (0, 0, 0), (565, 580), 10, 0)
-    circle(screen, (250, 250, 250), (568, 582), 3, 0)
+    circle(screen, (0, 0, 0), (int(Alpha * (565 + x - 460)),  int(Alpha * (580 + y - 480))), int(Alpha * 10), 0)
+    circle(screen, (250, 250, 250), (int(Alpha * (568 + x - 460)),  int(Alpha * (582 + y - 480))), int(Alpha * 3), 0)
 
     # Тело инотоварища.
-    ellipse(screen, color_of_ino, (500, 630, 70, 135), 0)
+    ellipse(screen, color_of_ino, (Alpha * (500 + x - 460), Alpha * (630 + y - 480), Alpha * 70, Alpha * 135), 0)
 
     # рука левая
-    ellipse(screen, color_of_ino, (486, 645, 28, 26), 0)
-    ellipse(screen, color_of_ino, (467, 664, 30, 20), 0)
-    ellipse(screen, color_of_ino, (458, 680, 15, 15), 0)
+    ellipse(screen, color_of_ino, (Alpha * (486 + x - 460), Alpha * (645 + y - 480), Alpha * 28, Alpha * 26), 0)
+    ellipse(screen, color_of_ino, (Alpha * (467 + x - 460), Alpha * (664 + y - 480), Alpha * 30, Alpha * 20), 0)
+    ellipse(screen, color_of_ino, (Alpha * (458 + x - 460), Alpha * (680 + y - 480), Alpha * 15, Alpha * 15), 0)
 
     # рука правая
-    ellipse(screen, color_of_ino, (556, 645, 28, 26), 0)
-    ellipse(screen, color_of_ino, (590, 660, 25, 18), 0)
-    ellipse(screen, color_of_ino, (617, 664, 32, 19), 0)
+    ellipse(screen, color_of_ino, (Alpha * (556 + x - 460), Alpha * (645 + y - 480), Alpha * 28, Alpha * 26), 0)
+    ellipse(screen, color_of_ino, (Alpha * (590 + x - 460), Alpha * (660 + y - 480), Alpha * 25, Alpha * 18), 0)
+    ellipse(screen, color_of_ino, (Alpha * (617 + x - 460), Alpha * (664 + y - 480), Alpha * 32, Alpha * 19), 0)
 
     # нога левая
-    ellipse(screen, color_of_ino, (490, 735, 30, 40), 0)
-    ellipse(screen, color_of_ino, (485, 765, 25, 35), 0)
-    ellipse(screen, color_of_ino, (450, 795, 50, 25), 0)
+    ellipse(screen, color_of_ino, (Alpha * (490 + x - 460), Alpha * (735 + y - 480), Alpha * 30, Alpha * 40), 0)
+    ellipse(screen, color_of_ino, (Alpha * (485 + x - 460), Alpha * (765 + y - 480), Alpha * 25, Alpha * 35), 0)
+    ellipse(screen, color_of_ino, (Alpha * (450 + x - 460), Alpha * (795 + y - 480), Alpha * 50, Alpha * 25), 0)
 
     # нога правая
-    ellipse(screen, color_of_ino, (550, 735, 30, 40), 0)
-    ellipse(screen, color_of_ino, (555, 770, 30, 40), 0)
-    ellipse(screen, color_of_ino, (560, 804, 52, 27), 0)
+    ellipse(screen, color_of_ino, (Alpha * (550 + x - 460), Alpha * (735 + y - 480), Alpha * 30, Alpha * 40), 0)
+    ellipse(screen, color_of_ino, (Alpha * (555 + x - 460), Alpha * (770 + y - 480), Alpha * 30, Alpha * 40), 0)
+    ellipse(screen, color_of_ino, (Alpha * (560 + x - 460), Alpha * (804 + y - 480), Alpha * 52, Alpha * 27), 0)
 
     # яблоко
-    ellipse(screen, (183, 0, 9), (630, 620, 64, 58), 0)
-    arc(screen, (0, 0, 0), (657, 610, 45, 60), 0.6 * pi, pi, 2)
+    ellipse(screen, (183, 0, 9), (Alpha * (630 + x - 460), Alpha * (620 + y - 480), Alpha * 64, Alpha * 58), 0)
+    arc(screen, (0, 0, 0), (Alpha * (657 + x - 460), Alpha * (610 + y - 480), Alpha * 45, Alpha * 60), 0.6 * pi, pi, 2)
 
 def background():
     """
@@ -147,10 +152,8 @@ def Exs2_imgN17(x, y, alpha):
 
     background()
     Clouds()
-
     NLO()
-
-    person()
+    person(20, 0, 0.7, color_of_ino)
 
 
 
