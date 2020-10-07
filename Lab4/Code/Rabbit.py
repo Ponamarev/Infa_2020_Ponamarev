@@ -175,6 +175,21 @@ def rabbit_legs(x, y, alphaX, alphaY, screen):  # FIX
     """
     ellipse(screen, grey, (x, y, alphaX * 60, alphaY * 40), 0)
 
+
+def rabbit_arm(x, y, alphaX, alphaY, screen):
+    """
+    Рисует лапку кролика.
+
+    :param x:       коодрината х центра лапки
+    :param y:       коодрината у центра лапки
+    :param alphaX:  коэфицент расширения русунка по х
+    :param alphaY:  коэфицент расширения русунка по у
+    :param screen:  экран, на котором рисуется кролик
+    :return:        None
+    """
+    circle(screen, grey, (int(x), int(y)), int(alphaX * 30), 0)
+
+
 def rabbit_somethings(x, y, alphaX, alphaY, screen):  # FIX
     """
     Функция рисует аксесуары кролика.
@@ -210,6 +225,8 @@ def rabbit(x, y, width, height):
     rabbit_body(x, y, alphaX, alphaY, screen)
     rabbit_legs(alphaX * 390, alphaY * 790, alphaX, alphaY, screen)
     rabbit_legs(alphaX * 550, alphaY * 790, alphaX, alphaY, screen)
+    rabbit_arm(alphaX * 402, alphaY * 490, alphaX, alphaY, screen)
+    rabbit_arm(alphaX * 597, alphaY * 490, alphaX, alphaY, screen)
     rabbit_somethings(x, y, alphaX, alphaY, screen)
 
     # Подключаем настройки pygame.
