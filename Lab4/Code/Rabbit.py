@@ -48,7 +48,11 @@ def rabbit_green_for_background(x, y, alphaX, alphaY, screen):
 
     # Рисуем сами травинки
     for step in range(count):
-        rect(screen, green_black, (x + step * alphaX * 8, y, alphaX * 12, alphaY * 5), 0)
+
+        # Получим высоту отдельной травинки.
+        height_of_green = random.randint(15, 30)
+        rect(screen, green_black, (x + step * alphaX * 7, y - alphaY * height_of_green,
+                                   alphaX * 3, alphaY * height_of_green), 0)
 
 
 def rabbit_background(alphaX, alphaY, screen):
@@ -65,7 +69,7 @@ def rabbit_background(alphaX, alphaY, screen):
 
     # рисуем траву:
     # Получаем количество травинок.
-    count = random.randint(10, 30)
+    count = random.randint(10, 50)
     # Рисуем эти травинки.
     for green_object in range(count):
         # Получаем коодинаты опорной точки для отдельной травинки.
