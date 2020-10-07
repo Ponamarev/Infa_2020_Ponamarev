@@ -37,12 +37,14 @@ def person():
     ellipse(screen, color_of_ino, (487, 514, 28, 13), 0)
     ellipse(screen, color_of_ino, (498, 530, 15, 15), 0)
     ellipse(screen, color_of_ino, (500, 540, 18, 15), 0)
+
     # правое ухо
     ellipse(screen, color_of_ino, (560, 540, 25, 20), 0)
     ellipse(screen, color_of_ino, (572, 530, 10, 11), 0)
     ellipse(screen, color_of_ino, (560, 540, 13, 16), 0)
     ellipse(screen, color_of_ino, (582, 513, 10, 24), 0)
     ellipse(screen, color_of_ino, (590, 500, 25, 20), 0)
+
     # голова.
     arc(screen, color_of_ino, (490, 550, 100, 30), 2 * pi, pi, 5)
     arc(screen, color_of_ino, (490, 488, 90, 150), pi, 1.5 * pi, 5)
@@ -54,30 +56,37 @@ def person():
     ellipse(screen, color_of_ino, (500, 590, 80, 30), 0)
     ellipse(screen, color_of_ino, (500, 570, 80, 60), 0)
     ellipse(screen, color_of_ino, (510, 605, 50, 30), 0)
+
     # глаза.
     circle(screen, (0, 0, 0), (520, 580), 12, 0)
     circle(screen, (250, 250, 250), (525, 583), 3, 0)
 
     circle(screen, (0, 0, 0), (565, 580), 10, 0)
     circle(screen, (250, 250, 250), (568, 582), 3, 0)
+
     # Тело инотоварища.
     ellipse(screen, color_of_ino, (500, 630, 70, 135), 0)
+
     # рука левая
     ellipse(screen, color_of_ino, (486, 645, 28, 26), 0)
     ellipse(screen, color_of_ino, (467, 664, 30, 20), 0)
     ellipse(screen, color_of_ino, (458, 680, 15, 15), 0)
+
     # рука правая
     ellipse(screen, color_of_ino, (556, 645, 28, 26), 0)
     ellipse(screen, color_of_ino, (590, 660, 25, 18), 0)
     ellipse(screen, color_of_ino, (617, 664, 32, 19), 0)
+
     # нога левая
     ellipse(screen, color_of_ino, (490, 735, 30, 40), 0)
     ellipse(screen, color_of_ino, (485, 765, 25, 35), 0)
     ellipse(screen, color_of_ino, (450, 795, 50, 25), 0)
+
     # нога правая
     ellipse(screen, color_of_ino, (550, 735, 30, 40), 0)
     ellipse(screen, color_of_ino, (555, 770, 30, 40), 0)
     ellipse(screen, color_of_ino, (560, 804, 52, 27), 0)
+
     # яблоко
     ellipse(screen, (183, 0, 9), (630, 620, 64, 58), 0)
     arc(screen, (0, 0, 0), (657, 610, 45, 60), 0.6 * pi, pi, 2)
