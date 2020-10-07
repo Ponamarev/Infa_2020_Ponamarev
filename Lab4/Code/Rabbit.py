@@ -136,9 +136,9 @@ def rabbit_head(x, y, alphaX, alphaY, screen):   # FIX
 
     # рот.
     arc(screen, black, (x + alphaX * 490, y + alphaY * 280,
-                        45, 60), 1 * pi, 1.5 * pi, 2)
+                        alphaX * 45, alphaY * 60), 1 * pi, 1.5 * pi, 2)
     arc(screen, black, (x + alphaX * 446, y + alphaY * 280,
-                        45, 60), 1.5 * pi, 2 * pi, 2)
+                        alphaX * 45, alphaY * 60), 1.5 * pi, 2 * pi, 2)
 
     # нос.
     ellipse(screen, black, (x + alphaX * 480, y + alphaY * 300, alphaX * 20, alphaY * 10), 0)
