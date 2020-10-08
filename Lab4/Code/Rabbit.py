@@ -190,7 +190,7 @@ def rabbit_arm(x, y, alphaX, alphaY, screen):
     circle(screen, grey, (int(x), int(y)), int(alphaX * 30), 0)
 
 
-def rabbit_somethings(x, y, alphaX, alphaY, screen):  # FIX
+def rabbit_somethings(x, y, alphaX, alphaY, screen):  # IN PROJECT
     """
     Функция рисует аксесуары кролика.
 
