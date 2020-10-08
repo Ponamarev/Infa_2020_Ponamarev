@@ -3,26 +3,45 @@ from pygame.draw import *
 
 pygame.init()
 
-screen = pygame.display.set_mode((800, 1000)) # будет заменен на экран с альфа каналом
-screen1 = pygame.Surface((800, 1000), pygame.SRCALPHA)
-clock = pygame.time.Clock()
+screen = pygame.display.set_mode((800, 1000))  # будет добавлен экран с альфа каналом
+screen2 = pygame.Surface((800, 1000))
+screen1 = pygame.Surface((800, 1000))
+screen2.set_colorkey((0, 0, 0))
+screen2.set_alpha(128)
 
 FPS = 30
 pi = 3.14159
 
 color_of_ino = (200, 254, 206)
+PURPLE = (255, 0, 255)
+White = (250, 255, 255)
+
 
 
 def Settings():
     pygame.display.update()
     clock = pygame.time.Clock()
-    finished = False
+    while True:
+        clock.tick(60)
 
-    while not finished:
-        clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                finished = True
+                quit()
+
+        pygame.display.update()
+
+
+def Settings_with_alphaChanel():
+    while True:
+        clock.tick(60)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit()
+            elif event.type == pygame.KEYDOWN:
+                screen.blit(screen1, (6675, 66625))
+
+        pygame.display.update()
 
 
 def apple(x, y, Alpha):
@@ -158,7 +177,7 @@ def Left_arm(x, y, Alpha, color_of_ino):
     ellipse(screen, color_of_ino, (Alpha * (458 + x - 460), Alpha * (680 + y - 480), Alpha * 15, Alpha * 15), 0)
 
 
-def  eyes(x, y, Alpha):
+def eyes(x, y, Alpha):
     """
     Рисует глаза для Ино.
 
@@ -227,27 +246,46 @@ def background():
     circle(screen, (193, 193, 193), (550, 223), 120, 0)
 
 
-def NLO():
+def NLO(x, y, NEW, Alpha):
     """
     рисует НЛО.
 
-    :return:  None
+    x, y       коодринаты верхней и левой граней НЛО.
+    NEW -      непрозраность.
+    Alpha -    коэфицент расширения.
+    :return:   None
     """
+    # Подключаем альфа канал.
+    screen1.set_colorkey((0, 0, 0, 0))
+    screen1.set_alpha(255)
+    screen2.set_colorkey((0, 0, 0, 0))
+    screen2.set_alpha(255)
+
     # Нло.
-    # луч захвата.
-    polygon(screen1, (115, 125, 150), [(160, 380), (110, 480), (210, 480)], 0)
-    polygon(screen1, (130, 150, 120), [(110, 480), (210, 480), (285, 630), (35, 630)], 0)
     # тело.
-    ellipse(screen, (150, 150, 150), (10, 355, 300, 90), 0)
-    ellipse(screen, (180, 180, 180), (55, 346, 205, 60), 0)
+    ellipse(screen1, (150, 150, 150), (Alpha * 10, Alpha * 355, Alpha * 300, Alpha * 90), 0)
+    ellipse(screen1, (180, 180, 180), (Alpha * 55, Alpha * 346, Alpha * 205, Alpha * 60), 0)
+
     # Фары.
-    ellipse(screen, (250, 255, 255), (20, 390, 30, 15), 0)
-    ellipse(screen, (250, 255, 255), (50, 410, 30, 15), 0)
-    ellipse(screen, (250, 255, 255), (90, 417, 30, 15), 0)
-    ellipse(screen, (250, 255, 255), (135, 420, 30, 15), 0)
-    ellipse(screen, (250, 255, 255), (180, 419, 30, 15), 0)
-    ellipse(screen, (250, 255, 255), (225, 410, 30, 15), 0)
-    ellipse(screen, (250, 255, 255), (260, 395, 30, 15), 0)
+    ellipse(screen1, White, (Alpha * 20, Alpha * 390, Alpha * 30, Alpha * 15), 0)
+    ellipse(screen1, White, (Alpha * 50, Alpha * 410, Alpha * 30, Alpha * 15), 0)
+    ellipse(screen1, White, (Alpha * 90, Alpha * 417, Alpha * 30, Alpha * 15), 0)
+    ellipse(screen1, White, (Alpha * 135, Alpha * 420, Alpha * 30, Alpha * 15), 0)
+    ellipse(screen1, White, (Alpha * 180, Alpha * 419, Alpha * 30, Alpha * 15), 0)
+    ellipse(screen1, White, (Alpha * 225, Alpha * 410, Alpha * 30, Alpha * 15), 0)
+    ellipse(screen1, White, (Alpha * 260, Alpha * 395, Alpha * 30, Alpha * 15), 0)
+
+    # луч захвата.
+    polygon(screen2, (205, 195, 190), [(Alpha * 155 - Alpha * 30, Alpha * 444),
+                                       (Alpha * 155 + Alpha * 30, Alpha * 444),
+                                       (Alpha * 155 + Alpha * 120, Alpha * 444 + Alpha * 186),
+                                       (Alpha * 155 - Alpha * 120, Alpha * 444 + Alpha * 186)], 0)
+
+    screen2.set_alpha(NEW * 0.4)
+    screen1.set_alpha(NEW)
+
+    screen.blit(screen2, (((0 + x) / Alpha), ((-350 + y) / Alpha)))
+    screen.blit(screen1, (((0 + x) / Alpha), ((-350 + y) / Alpha)))
 
 
 def Clouds():
@@ -269,12 +307,32 @@ def Clouds():
     ellipse(screen, (55, 55, 55), (-370, 170, 730, 110), 0)  # 2
 
 
-def Exs2_imgN17(x, y, alpha):
+def Exs2_imgN17():
     background()
     Clouds()
-    NLO()
-    person(20, 0, alpha, (200, 25, 206, 255))
+    NLO(0, 350, 200, 1)
+    NLO(110, 250, 50, 1)
+    NLO(400, 50, 200, 1)
 
 
-Exs2_imgN17(0, 0, 1)
+
+    person(1000, 950, 0.5, (0, 225, 206))
+    person(800, 1100, 0.5, (200, 25, 206))
+    person(300, 1000, 0.5, (200, 25, 4))
+
+
+def test():
+    """
+    Помогает понять, как работает альфа канал.
+
+    :return: None
+    """
+    purple_image = pygame.Surface((800, 1000))
+    purple_image.set_alpha(55)
+    rect(purple_image, PURPLE, (0, 0, 30, 30), 10)
+    screen.blit(purple_image, (0, 0))
+
+
+Exs2_imgN17()
+
 Settings()
