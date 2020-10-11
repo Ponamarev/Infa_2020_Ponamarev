@@ -289,6 +289,8 @@ def NLO(x, y, NEW, Alpha):
     :return:   None
     """
     # Подключаем альфа канал.
+    screen2 = pygame.Surface((800, 1000))
+    screen1 = pygame.Surface((800, 1000))
     screen1.set_colorkey((0, 0, 0, 0))
     screen1.set_alpha(255)
     screen2.set_colorkey((0, 0, 0, 0))
@@ -418,8 +420,8 @@ def Rey_active():
     :return:    None
     """
     global Active_rey
-    if Active_rey:
-        Active_rey -= 1
+    if Active_rey == 1:
+        Active_rey = 0
     else:
         Active_rey = 1
 
