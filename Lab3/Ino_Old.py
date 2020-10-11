@@ -1,9 +1,11 @@
 import pygame
 from pygame.draw import *
+from tkinter import *
 
-pygame.init()
+pygame.init()  # Инициализация Pygame.
+Window = Tk()  # Графический интерпретатор.
 
-screen = pygame.display.set_mode((800, 1000)) # будет заменен на экран с альфа каналом
+screen = pygame.display.set_mode((800, 1000))  # будет заменен на экран с альфа каналом
 screen1 = pygame.Surface((800, 1000), pygame.SRCALPHA)
 clock = pygame.time.Clock()
 
@@ -23,6 +25,7 @@ def Settings():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 finished = True
+            # if event.ty
 
 
 def apple(x, y, Alpha):
@@ -150,7 +153,7 @@ def Left_arm(x, y, Alpha, color_of_ino):
     ellipse(screen, color_of_ino, (Alpha * (458 + x - 460), Alpha * (680 + y - 480), Alpha * 15, Alpha * 15), 0)
 
 
-def  eyes(x, y, Alpha):
+def eyes(x, y, Alpha):
     """
     Рисует глаза для Ино.
     :param x:           Координата х опорной точки Ино.
@@ -256,6 +259,34 @@ def Clouds():
     ellipse(screen, (55, 55, 55), (-370, 170, 730, 110), 0)  # 2
 
 
+def Learn_text(Window, text, x, y, Alpha):
+    """
+    Пишет текст для управления в Tkinter.
+
+    :param Window:    Окно Tkinter, в котором пишеся текст.
+    :param text:      Сам текст.
+    :param x:         Номер блока текста по гор. оси
+    :param y:         Номер блока текста по верт. оси.
+    :param Alpha:     Заполняет все блоки левее пустыми блоками
+    :return:          None
+    """
+    if Alpha:         # Заполняем блоки левее нужного.
+        for Block in range(x - 1):
+            text1 = Label(Window, text="           ")
+            text1.grid(column=Block, row=y)
+
+    text1 = Label(Window, text=text)
+    text1.grid(column=x, row=y)
+
+def Learning():
+    global Window
+
+    Window.title("Управление")  # Название окна.
+    Window.geometry("700x450")
+    Learn_text(Window, "Будет добавлено в Ino_NEW_Animated.py", 1, 0, True)
+    Learn_text(Window, "Версия 1.1", 1, 1, True)
+
+
 def Exs2_imgN17(x, y, alpha):
     background()
     Clouds()
@@ -263,5 +294,10 @@ def Exs2_imgN17(x, y, alpha):
     person(20, 0, alpha, (200, 25, 206, 255))
 
 
-Exs2_imgN17(0, 0, 1)
-Settings()
+try:
+    Learning()
+    Window.mainloop()
+
+finally:
+    Exs2_imgN17(0, 0, 1)
+    Settings()
