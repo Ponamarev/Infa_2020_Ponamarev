@@ -452,19 +452,19 @@ def saver():
     """
     file = open('file_logs.txt', 'w')
     for i in range(len(array_of_logs)):
-        if array_of_logs[i] != "":  # Убираем пустые строки.
+        if array_of_logs[i] != "" + '\n':  # Убираем пустые строки.
             file.write(array_of_logs[i] + '\n')  # Сохраняем данные.
     file.close()
 
     file = open('file_pas.txt', 'w')
     for i in range(len(array_of_pass)):
-        if array_of_pass[i] != "":  # Убираем пустые строки.
+        if array_of_pass[i] != "" + '\n':  # Убираем пустые строки.
             file.write(array_of_pass[i] + '\n')  # Сохраняем данные.
     file.close()
 
     file = open('file_store.txt', 'w')
     for i in range(len(array_of_stores)):
-        if array_of_stores[i] != "":  # Убираем пустые строки.
+        if array_of_stores[i] != "" + '\n':  # Убираем пустые строки.
             file.write(array_of_stores[i] + '\n')  # Сохраняем данные.
     file.close()
 
