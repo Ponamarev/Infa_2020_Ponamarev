@@ -10,6 +10,7 @@ screen2 = pygame.Surface((800, 1000))
 screen1 = pygame.Surface((800, 1000))
 screen2.set_colorkey((0, 0, 0))
 screen2.set_alpha(128)
+screen3 = pygame.Surface((800, 1000))
 
 FPS = 30
 pi = 3.14159
@@ -61,6 +62,10 @@ def Settings():
         Go_check()
         Rey_check()
         Exs2_imgN17()
+        if V_x_NLO != 0:
+            screen3 = pygame.transform.rotate(screen1, int(50 * V_x_NLO / 5))
+            screen3 = pygame.transform.rotate(screen2, int(50 * V_x_NLO / 5))
+            screen.blit(screen3, (((0 + x_NLO) / 0.5), ((-350 + y_NLO) / 0.5)))
         pygame.display.update()
 
 
@@ -441,7 +446,7 @@ def Rey_check():
     if Active_rey == 0 and Anim_rey_numF > 0:
         Anim_rey_numF -= 1       # Считаем кадры
 
-        if Anim_rey_numF <= 100:  # 120, 186 - координаты макс x_rey и y_rey
+        if Anim_rey_numF < 100:  # 120, 186 - координаты макс x_rey и y_rey
             y_rey -= 186 / 100
         else:
             x_rey -= 90 / 20
@@ -453,6 +458,7 @@ def Going_NLO_check(V_x_NLO, V_y_NLO):
     """
     global x_NLO
     global y_NLO
+    global screen1, screen2
     x_NLO += V_x_NLO
     y_NLO -= V_y_NLO
 
