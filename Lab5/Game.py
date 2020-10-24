@@ -13,7 +13,6 @@ screen_Rocket = pygame.Surface((90, 320))
 screen_Rocket.set_colorkey((0, 0, 0, 0))
 screen_Rocket.set_alpha(255)
 
-
 FPS = 30
 screen = pygame.display.set_mode((1200, 900))
 pygame.display.set_caption("Игра")
@@ -45,19 +44,18 @@ array_of_stores = []  # Массив рекордов.
 Health = 255  # Здоровье корабля ( Принимает значения от 0 до 255).
 Space_load = 0  # Очки возмножности использовать функцию.
 frame = 0
-is_rocket_on = 0 # Нужна, чтобы проверять, можно ли спавнить шарики.
-is_rocketE_on = 0 # Нужна, чтобы проверять, можно ли спавнить шарики.
-is_ball_black = 0 # Нужна, чтобы проверять, рисовать ли шарик, после стирания.
-defeat = 0 # Урон, от ракеты.
-power_of_notEnemy_rocket = 0 # Сила ракеты.
-x_rocketE = 0 # Координата ракеты.
-y_rocketE = 0 # Координата ракеты.
+is_rocket_on = 0  # Нужна, чтобы проверять, можно ли спавнить шарики.
+is_rocketE_on = 0  # Нужна, чтобы проверять, можно ли спавнить шарики.
+is_ball_black = 0  # Нужна, чтобы проверять, рисовать ли шарик, после стирания.
+defeat = 0  # Урон, от ракеты.
+power_of_notEnemy_rocket = 0  # Сила ракеты.
+x_rocketE = 0  # Координата ракеты.
+y_rocketE = 0  # Координата ракеты.
 ancleE = 180  # Угол наклона ракеты.
-x_rocket = 0 # Координата ракеты.
-y_rocket = 0 # Координата ракеты.
-ancle = 0    # Угол наклона ракеты.
-max_num_of_balls_colour = 5 # Нужно, чтобы менять цвета шариков.
-
+x_rocket = 0  # Координата ракеты.
+y_rocket = 0  # Координата ракеты.
+ancle = 0  # Угол наклона ракеты.
+max_num_of_balls_colour = 5  # Нужно, чтобы менять цвета шариков.
 
 
 def new_ball(x, y, r):
@@ -77,7 +75,7 @@ def triggered():
     :return: None
     """
     global store, r, Space_load, power_of_notEnemy_rocket, defeat
-    print(pos_ball) # Диагностика.
+    print(pos_ball)  # Диагностика.
     # Если попали по мячику, то увеличим счет.
     if is_rocket_on == 0 and is_rocketE_on == 0:
         if pos_ball[0][2] < 20:
@@ -136,13 +134,17 @@ def Click(x, y, r):
             mistake()
 
     # Если летят ракеты, то нужно проверить попадание по ним мышкой.
-    elif    x_rocket - 50 * math.sin(3.14 / 180 * ancle) - 90 <= pos[0] <= x_rocket + 50 * math.sin(3.14 / 180 * ancle)  \
-        and y_rocket - 50 * math.cos(3.14 / 180 * ancle) - 90 <= pos[1] <= y_rocket + 50 * math.cos(3.14 / 180 * ancle) :
+    elif x_rocket - 50 * math.sin(3.14 / 180 * ancle) - 90 <= pos[0] <= x_rocket + 50 * math.sin(3.14 / 180 * ancle) \
+            and y_rocket - 50 * math.cos(3.14 / 180 * ancle) - 90 <= pos[1] <= y_rocket + 50 * math.cos(
+        3.14 / 180 * ancle):
         triggered()
 
-    elif    x_rocketE + 120 * math.sin(3.14 / 180 * ancleE) - 10 <= pos[0] <= x_rocketE + 225 * math.sin(3.14 / 180 * ancleE) + 30\
-        and y_rocketE - 20 * math.cos(3.14 / 180 * ancleE) - 40 <= pos[1] <= y_rocketE - 260 * math.cos(3.14 / 180 * ancleE) - 20:
+    elif x_rocketE - 120 * math.sin(3.14 / 180 * ancleE) - 10 <= pos[0] <= x_rocketE - 225 * math.sin(
+            3.14 / 180 * ancleE) + 30 \
+            and y_rocketE - 90 * math.cos(3.14 / 180 * ancleE) - 40 <= pos[1] <= y_rocketE - 180 * math.cos(
+        3.14 / 180 * ancleE) - 20:
         triggered()
+        
     # Диагностический вывод.
     print(defeat)
     print(x_rocketE - 120 * math.sin(3.14 / 180 * ancleE) - 10, x_rocketE - 225 * math.sin(3.14 / 180 * ancleE) + 30)
@@ -230,7 +232,7 @@ def CLac_clik():
     включит звук.
     :return:  None
     """
-    if randint(1,2) == 1:
+    if randint(1, 2) == 1:
         pygame.mixer.music.load("камера клац.mp3")
         pygame.mixer.music.play()
     else:
@@ -283,7 +285,7 @@ def enemy_rocket_start():
     atackSound()
     x_rocketE = 100
     y_rocketE = 200
-    ancleE  = 180
+    ancleE = 180
     is_rocketE_on = 1
     Rocket_print(x_rocketE, y_rocketE, 0.4, ancleE)
 
@@ -295,7 +297,7 @@ def enemy_rocket_check():
     """
     global x_rocketE, y_rocketE, ancleE, Health, is_rocketE_on, frame, defeat
     if is_rocketE_on == 2:
-        enemy_rocket_start() # Инициализация ракеты.
+        enemy_rocket_start()  # Инициализация ракеты.
 
     elif is_rocketE_on == 1:
         # Движение ракеты.
@@ -314,10 +316,10 @@ def enemy_rocket_check():
 
         else:
             artSound()  # звук попадания.
-            is_rocketE_on = 0   # выключение ракеты.
-            Health -= defeat    # Нанесем урон от попадания.
-            defeat = 0    # Обнулим урон до следующего запуска ракеты.
-            frame = 0   # Запускает появление шаров.
+            is_rocketE_on = 0  # выключение ракеты.
+            Health -= defeat  # Нанесем урон от попадания.
+            defeat = 0  # Обнулим урон до следующего запуска ракеты.
+            frame = 0  # Запускает появление шаров.
 
         Rocket_print(x_rocketE, y_rocketE, 0.4, ancleE)
 
@@ -329,12 +331,12 @@ def start_notEnemy_rocket():
     """
     global x_rocket, y_rocket, ancle, is_rocket_on
 
-    if max_num_of_balls_colour != 0: # Не перебивает гимн СССР.
+    if max_num_of_balls_colour != 0:  # Не перебивает гимн СССР.
         RocketStart__()
     # Зададим начальные параметры ракеты.
     x_rocket = 900
     y_rocket = 700
-    ancle  = 0
+    ancle = 0
     is_rocket_on = 1
     # Нарисуем ракету.
     Rocket_print(x_rocket, y_rocket, 0.4, ancle)
@@ -347,7 +349,7 @@ def notEnemy_rocket_check():
     """
     global x_rocket, y_rocket, ancle, Health, is_rocket_on, store, frame, power_of_notEnemy_rocket
     if is_rocket_on == 2:
-        start_notEnemy_rocket() # Инициализация ракеты.
+        start_notEnemy_rocket()  # Инициализация ракеты.
 
     elif is_rocket_on == 1:
         if y_rocket > 300:
@@ -362,13 +364,13 @@ def notEnemy_rocket_check():
             x_rocket -= 5
 
         else:
-            is_rocket_on = 0   # выключение ракеты.
-            artSound()          # звук попадания.
-            if max_num_of_balls_colour == 0: # Возращает гимн СССР.
+            is_rocket_on = 0  # выключение ракеты.
+            artSound()  # звук попадания.
+            if max_num_of_balls_colour == 0:  # Возращает гимн СССР.
                 USSR()
-            store += power_of_notEnemy_rocket    # Нанесем урон от попадания.
+            store += power_of_notEnemy_rocket  # Нанесем урон от попадания.
             frame = 0  # Запускает появление шаров.
-            power_of_notEnemy_rocket = 0    # Обнулим урон до следующего запуска ракеты.
+            power_of_notEnemy_rocket = 0  # Обнулим урон до следующего запуска ракеты.
 
         # Рисуем ракету
         Rocket_print(x_rocket, y_rocket, 0.4, ancle)
@@ -593,15 +595,15 @@ def Rocket_print(x_rocket, y_rocket, alpha, ancle):
     right_fire = randint(1, 3)
 
     # Боковые струи пламени.
-    polygon(screen_Rocket, (226 ,88, 34), [(15 * alpha, 350 * alpha),
-                                             (75 * alpha, 350 * alpha),
-                                             ((10 * right_fire + 35) * alpha, (17 * right_fire + 350) * alpha),
-                                             (45 * alpha, 350 * alpha),
-                                             ((15 - left_fire * 3) * alpha,  (17 * left_fire  + 350) * alpha)], 0)
+    polygon(screen_Rocket, (226, 88, 34), [(15 * alpha, 350 * alpha),
+                                           (75 * alpha, 350 * alpha),
+                                           ((10 * right_fire + 35) * alpha, (17 * right_fire + 350) * alpha),
+                                           (45 * alpha, 350 * alpha),
+                                           ((15 - left_fire * 3) * alpha, (17 * left_fire + 350) * alpha)], 0)
     # Центральный огонь.
     polygon(screen_Rocket, (226, 113, 34), [(15 * alpha, 350 * alpha),
                                             ((45 + 1 * (left_fire - right_fire)) * alpha,
-                                            160 + 1 * math.fabs(left_fire - right_fire)),
+                                             160 + 1 * math.fabs(left_fire - right_fire)),
                                             (75 * alpha, 350 * alpha)], 0)
 
     # Линия, проходящая через центр ракеты, проверяем точность поворота.
@@ -609,7 +611,7 @@ def Rocket_print(x_rocket, y_rocket, alpha, ancle):
 
     # Добавляем ракету на поверхность, которую будем поворачивать.
     screen_Rocket_rotate = pygame.transform.rotate(screen_Rocket, ancle)
-    screen.blit(screen_Rocket_rotate, (x_rocket - 45 * alpha  - 60 * (math.sin(3.14159 / 180 * ancle)),
+    screen.blit(screen_Rocket_rotate, (x_rocket - 45 * alpha - 60 * (math.sin(3.14159 / 180 * ancle)),
                                        y_rocket - 120 * alpha - 45 * (math.cos(3.14159 / 180 * ancle))))
 
 
@@ -746,7 +748,7 @@ def main():
 
         frame += 1
 
-        if frame == 30 and is_rocket_on == 0 and is_rocketE_on  == 0:
+        if frame == 30 and is_rocket_on == 0 and is_rocketE_on == 0:
             new_ball(x, y, r)
             frame = 0
 
@@ -760,4 +762,4 @@ if __name__ == "__main__":
 
     indificate()  # Запускает окно регистрации.
     Window.mainloop()  # Открывает это окно.
-    #main()  # Добавлено, тк не работает вузовский комп.
+    # main()  # Добавлено, тк не работает вузовский комп.
