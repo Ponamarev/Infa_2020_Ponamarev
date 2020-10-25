@@ -144,7 +144,7 @@ def Click(x, y, r):
             and y_rocketE - 90 * math.cos(3.14 / 180 * ancleE) - 40 <= pos[1] <= y_rocketE - 180 * math.cos(
         3.14 / 180 * ancleE) - 20:
         triggered()
-        
+
     # Диагностический вывод.
     print(defeat)
     print(x_rocketE - 120 * math.sin(3.14 / 180 * ancleE) - 10, x_rocketE - 225 * math.sin(3.14 / 180 * ancleE) + 30)
@@ -511,11 +511,14 @@ def searching():
             Store_User = int(array_of_stores[num])  # Берет из массива данных рекорд.
             num_in_arr = num  # Сохраняет номер строки с данными.
             Window.destroy()  # Убирает окно регистрации.
-            main()  # Запускает основную функцию.
 
-            # Далее выполняется после закрытия программы.
-            array_of_stores[num_in_arr] = str(Store_User)  # Кладет в массив данных рекорд.
-            saver()  # Сохраняет данные.
+            try:
+                main()  # Запускает основную функцию.
+
+            except:
+                # Далее выполняется после закрытия программы.
+                array_of_stores[num_in_arr] = str(Store_User)  # Кладет в массив данных рекорд.
+                saver()  # Сохраняет данные.
 
 
 def Space_print():
