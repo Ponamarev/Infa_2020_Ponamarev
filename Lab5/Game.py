@@ -79,7 +79,7 @@ def print_ball():
     if is_ball_black == 0 and is_rocket_on == 0 and is_rocketE_on == 0:
         circle(screen, color_of_balls[0], (pos_ball[0][0], pos_ball[0][1]), pos_ball[0][2])
     # pos_ball - Массив информации о шарике.
-    
+
 
 def triggered():
     """
