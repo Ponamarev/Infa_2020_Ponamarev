@@ -196,7 +196,7 @@ def BAX1():
     включит звук.
     :return:  None
     """
-    pygame.mixer.music.load("выстрел 1.mp3")
+    pygame.mixer.music.load("Musics/выстрел 1.mp3")
     pygame.mixer.music.play()
 
 
@@ -205,7 +205,7 @@ def BAX2():
     включит звук.
     :return:  None
     """
-    pygame.mixer.music.load("выстрел 2.mp3")
+    pygame.mixer.music.load("Musics/выстрел 2.mp3")
     pygame.mixer.music.play()
 
 
@@ -214,7 +214,7 @@ def BAXMANY():
     включит звук.
     :return:  None
     """
-    pygame.mixer.music.load("выстрел много.mp3")
+    pygame.mixer.music.load("Musics/выстрел много.mp3")
     pygame.mixer.music.play()
 
 
@@ -223,7 +223,7 @@ def USSR():
     включит звук.
     :return:  None
     """
-    pygame.mixer.music.load("Гимн СССР.mp3")
+    pygame.mixer.music.load("Musics/Гимн СССР.mp3")
     pygame.mixer.music.play()
 
 
@@ -233,10 +233,10 @@ def CLac_clik():
     :return:  None
     """
     if randint(1, 2) == 1:
-        pygame.mixer.music.load("камера клац.mp3")
+        pygame.mixer.music.load("Musics/камера клац.mp3")
         pygame.mixer.music.play()
     else:
-        pygame.mixer.music.load("камера клик.mp3")
+        pygame.mixer.music.load("Musics/камера клик.mp3")
         pygame.mixer.music.play()
 
 
@@ -245,7 +245,7 @@ def RocketStart__():
     включит звук.
     :return:  None
     """
-    pygame.mixer.music.load("старт ракеты.mp3")
+    pygame.mixer.music.load("Musics/старт ракеты.mp3")
     pygame.mixer.music.play()
 
 
@@ -254,7 +254,7 @@ def RocketStart_():
     включит звук.
     :return:  None
     """
-    pygame.mixer.music.load("запуск ракеты.mp3")
+    pygame.mixer.music.load("Musics/запуск ракеты.mp3")
     pygame.mixer.music.play()
 
 
@@ -263,7 +263,7 @@ def atackSound():
     включит звук.
     :return:  None
     """
-    pygame.mixer.music.load("Сирена1.mp3")
+    pygame.mixer.music.load("Musics/Сирена1.mp3")
     pygame.mixer.music.play()
 
 
@@ -272,7 +272,7 @@ def artSound():
     включит звук.
     :return:  None
     """
-    pygame.mixer.music.load("артилерия.mp3")
+    pygame.mixer.music.load("Musics/артилерия.mp3")
     pygame.mixer.music.play()
 
 
@@ -452,19 +452,19 @@ def saver():
     Сохраняет данные в файлы.
     :return: None
     """
-    file = open('file_logs.txt', 'w')
+    file = open('Logs/file_logs.txt', 'w')
     for i in range(len(array_of_logs)):
         if array_of_logs[i] != "" + '\n':  # Убираем пустые строки.
             file.write(array_of_logs[i] + '\n')  # Сохраняем данные.
     file.close()
 
-    file = open('file_pas.txt', 'w')
+    file = open('Logs/file_pas.txt', 'w')
     for i in range(len(array_of_pass)):
         if array_of_pass[i] != "" + '\n':  # Убираем пустые строки.
             file.write(array_of_pass[i] + '\n')  # Сохраняем данные.
     file.close()
 
-    file = open('file_store.txt', 'w')
+    file = open('Logs/file_store.txt', 'w')
     for i in range(len(array_of_stores)):
         if array_of_stores[i] != "" + '\n':  # Убираем пустые строки.
             file.write(array_of_stores[i] + '\n')  # Сохраняем данные.
@@ -478,15 +478,15 @@ def get_logs():
     """
     global array_of_logs, array_of_pass, array_of_stores  # Массивы с данными.
 
-    file = open('file_logs.txt', 'r')
+    file = open('Logs/file_logs.txt', 'r')
     array_of_logs = file.readlines()
     file.close()
 
-    file = open('file_pas.txt', 'r')
+    file = open('Logs/file_pas.txt', 'r')
     array_of_pass = file.readlines()
     file.close()
 
-    file = open('file_store.txt', 'r')
+    file = open('Logs/file_store.txt', 'r')
     array_of_stores = file.readlines()
     file.close()
 
@@ -523,6 +523,8 @@ def searching():
 
 def Space_print():
     """
+
+    
     Рисует шкалу, показывающую накопленную силу удара.
 
     :return: None
