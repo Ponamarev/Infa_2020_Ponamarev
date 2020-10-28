@@ -33,7 +33,8 @@ COLORS = [RED, BLUE, YELLOW, GREEN, MAGENTA, CYAN]
 
 x, y, r = 0, 0, 0  # Не используются.
 store = 0  # Текущий счет.
-pos_ball = [(0, 0, 0)]  # Массив позиций мячиков.
+pos_ball = [(0, 0, 0)]  # Массив позиций и радиусов мячиков.
+color_of_balls = [(0, 0, 0)]  # Масив цветов шариков
 Store_User = 0  # Рекорд.
 log_User = ""  # Введенный логин
 pas_User = ""  # Введенный пароль.
@@ -60,14 +61,25 @@ max_num_of_balls_colour = 5  # Нужно, чтобы менять цвета ш
 
 def new_ball(x, y, r):
     '''рисует новый шарик '''
-    global pos_ball
+    global pos_ball, is_ball_black, color_of_balls
+
+    is_ball_black = randint(0, 1)  # Проверяет, будет ли шарик невидим.
     x = randint(100, 1100)
     y = randint(300, 600)
     r = randint(10, 100)
-    pos_ball = [(x, y, r)]
     color = COLORS[randint(0, max_num_of_balls_colour)]
+    color_of_balls = [color]
+    pos_ball = [(x, y, r)]  # Массив информации о шарике.
     circle(screen, color, (x, y), r)
 
+
+def print_ball():
+    global pos_ball, is_ball_black, color_of_balls
+
+    if is_ball_black == 0 and is_rocket_on == 0 and is_rocketE_on == 0:
+        circle(screen, color_of_balls[0], (pos_ball[0][0], pos_ball[0][1]), pos_ball[0][2])
+    # pos_ball - Массив информации о шарике.
+    
 
 def triggered():
     """
@@ -78,16 +90,17 @@ def triggered():
     print(pos_ball)  # Диагностика.
     # Если попали по мячику, то увеличим счет.
     if is_rocket_on == 0 and is_rocketE_on == 0:
-        if pos_ball[0][2] < 20:
-            store += 10
+        # В зависимоти от радиуса
+        if pos_ball[0][2] < 20:  # pos_ball - массив информации о шариках. На 2 месте лежит радиус.
+            store += 5 * (is_ball_black + 1)
 
-        elif pos_ball[0][2] < 50:
-            store += 5
+        elif pos_ball[0][2] < 50:  # pos_ball - массив информации о шариках. На 2 месте лежит радиус.
+            store += 2.5 * (is_ball_black + 1)
 
         else:
-            store += 3
+            store += 1.5 * (is_ball_black + 1)
 
-        Space_load += 200 // pos_ball[0][2]
+        Space_load += 100 // pos_ball[0][2] * (is_ball_black + 1)
 
     # Если летит ракета, то увеличим ее силу.
     elif is_rocket_on == 1:
@@ -742,21 +755,26 @@ def main():
         Text_print("Удар (Пробел)", 800)
         store_check()
 
+
         # Примерно раз в минуту enemy тоже умеет пускать ракету.
         if randint(1, Rocket_chanse) == 1:
             is_rocketE_on = 2
 
-        enemy_click()  # Проверка клика enemy.
+        # Проверка клика enemy.
+        enemy_click()
         # Проверка ракет.
         notEnemy_rocket_check()
         enemy_rocket_check()
 
-        frame += 1
+        # Подсчет количества кадров, прошедшего с прошлого появления шарика.
+        frame += 1  # После полета ракеты frame обнуляется, т к полет длится более 30 кадров.
 
+        # Раз в 30 кадров обновляем шарик.
         if frame == 30 and is_rocket_on == 0 and is_rocketE_on == 0:
             new_ball(x, y, r)
-            frame = 0
+            frame = 0  # Начинем новый отсчет.
 
+        print_ball()
 
 if __name__ == "__main__":
 
@@ -767,4 +785,4 @@ if __name__ == "__main__":
 
     indificate()  # Запускает окно регистрации.
     Window.mainloop()  # Открывает это окно.
-    # main()  # Добавлено, тк не работает вузовский комп.
+    # main()  # Добавлено, для ыключения без регистрации.
