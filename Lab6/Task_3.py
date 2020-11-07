@@ -121,6 +121,7 @@ class gun():
         bullet += 1
         new_ball = ball(self.x, self.y)
         new_ball.r += 5
+        print(self.an)
         # Зададим скорости снаряду.
         new_ball.vx = self.f2_power * math.cos(self.an) / 3
         new_ball.vy = - self.f2_power * math.sin(self.an) / 3
@@ -137,6 +138,15 @@ class gun():
             # Поворачивает угол относительно вертикали, если курсор левее пушки.
             if (event.x - self.x) / math.fabs(event.x - self.x) == -1:
                 self.an = math.atan((event.y - self.y) / (event.x - self.x)) + math.pi
+            # Поворачивает пушку с учетом направления танка.
+            if 0 < self.an < math.pi / 2:
+                self.an = 0
+            elif math.pi / 2 <= self.an < math.pi:
+                self.an == math.pi
+            elif tank.rootate == 1 and math.pi <= self.an <= 1.5 * math.pi:
+                self.an = -1 * math.pi / 2
+            elif tank.rootate == -1 and -0.5 * math.pi <= self.an <= 0:
+                self.an = 1.5 * math.pi
 
         if self.f2_on:
             canv.itemconfig(self.id, fill='orange')
@@ -363,7 +373,7 @@ class tank():
         self.print_tower(x, y, distance, alpha)
 
     def move(self):
-        if 100 < self.x < 720:
+        if 100 + self.vx < self.x < 720 + self.vx:
             self.x += self.vx
             alpha = self.alpha
             rootate = self.rootate
@@ -399,11 +409,16 @@ class tank():
             g1.x = x + (distance / 2 + 4 * alpha) * rootate
 
     def move_left(self, event):
-        print(1)
-        if event.keysym == 'Key-a':
-            print(2)
-            self.vx = -1
-            self.rootate = -1
+        if event.keysym == 'Left':
+            self.vx -= 1
+            self.x -= 5
+            if self.vx <= 0:
+                self.rootate = -1
+        if event.keysym == 'Right':
+            self.vx += 1
+            self.x += 5
+            if self.vx >= 0:
+                self.rootate = 1
 
 
 targs = []  # Массив активных мишеней.
