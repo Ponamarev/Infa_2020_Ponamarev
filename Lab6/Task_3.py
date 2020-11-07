@@ -121,7 +121,6 @@ class gun():
         bullet += 1
         new_ball = ball(self.x, self.y)
         new_ball.r += 5
-        print(self.an)
         # Зададим скорости снаряду.
         new_ball.vx = self.f2_power * math.cos(self.an) / 3
         new_ball.vy = - self.f2_power * math.sin(self.an) / 3
@@ -143,9 +142,9 @@ class gun():
                 self.an = 0
             elif math.pi / 2 <= self.an < math.pi:
                 self.an == math.pi
-            elif tank.rootate == 1 and math.pi <= self.an <= 1.5 * math.pi:
+            elif tank.rootate == 1 and math.pi / 2 <= self.an <= 1.5 * math.pi:
                 self.an = -1 * math.pi / 2
-            elif tank.rootate == -1 and -0.5 * math.pi <= self.an <= 0:
+            elif tank.rootate == -1 and -0.5 * math.pi <= self.an <= 0.5 * math.pi:
                 self.an = 1.5 * math.pi
 
         if self.f2_on:
