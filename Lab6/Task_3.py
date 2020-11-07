@@ -26,6 +26,7 @@ class ball():
         self.r = 10
         self.vx = 0
         self.vy = 0
+        self.g = 0.18  # Ускорение свободного падения.
         self.color = choice(['blue', 'green', 'red', 'brown'])
         self.id = canv.create_oval(
             self.x - self.r,
@@ -34,12 +35,12 @@ class ball():
             self.y + self.r,
             fill=self.color
         )
-        self.live = 30
+        self.live = rnd(1, 10)
 
     def destroy(self):
         """Проверяет необходимость удаления мяча из списка мячейю
            Возращает 1, если нужно убрать, 0 если не нужно"""
-        if self.delete == 1:
+        if self.live == 0 or self.delete == 1:
             canv.delete(self.id)
             return 1
         else:
@@ -68,7 +69,7 @@ class ball():
             if self.vy < 0:
                 self.vy *= -1
 
-        self.vy -= 1
+        self.vy -= self.g
         if self.y - self.vy > 556:
             self.vy = 0
 
@@ -78,8 +79,8 @@ class ball():
         self.x += self.vx
         self.y -= self.vy
         self.set_coords()
-        self.vx *= 0.985
-        self.vy *= 0.99
+        self.vx *= 0.998
+        self.vy *= 0.995
 
     def hittest(self, obj):
         """Функция проверяет сталкивалкивается ли данный обьект с целью, описываемой в обьекте obj.
@@ -101,7 +102,7 @@ class gun():
         self.f2_on = 0
         self.an = 1
 
-        # Координаты пушки.
+        # Координаты пушки. # Перезаписываются в классе tank.
         self.x = 200
         self.y = 480
 
@@ -121,8 +122,8 @@ class gun():
         new_ball = ball(self.x, self.y)
         new_ball.r += 5
         # Зададим скорости снаряду.
-        new_ball.vx = self.f2_power * math.cos(self.an)
-        new_ball.vy = - self.f2_power * math.sin(self.an)
+        new_ball.vx = self.f2_power * math.cos(self.an) / 3
+        new_ball.vy = - self.f2_power * math.sin(self.an) / 3
         balls += [new_ball]
         self.f2_on = 0
         self.f2_power = 10
@@ -149,10 +150,10 @@ class gun():
                     )
 
     def power_up(self):
-        """Увеличавает начальную скорость снаряда, пока зажат мышь, и он еще не запущен"""
+        """Увеличавает начальную скорость снаряда, пока зажата мышь, и он еще не запущен"""
         if self.f2_on:
             if self.f2_power < 50:
-                self.f2_power += 3
+                self.f2_power += 3 / 4
 
             canv.itemconfig(self.id, fill='orange')
 
@@ -164,21 +165,21 @@ class target():
     def __init__(self):
         self.points = 0
         self.id = canv.create_oval(0, 0, 0, 0)
-        self.id_points = canv.create_text(30, 30, text=self.points, font='28')
         self.new_target()
+        self.colors = ['green', 'yellow', 'orange', 'red']
 
     def new_target(self):
         """ Инициализация новой цели. """
-        x = self.x = rnd(600, 780)
+        x = self.x = rnd(600, 750)
         y = self.y = rnd(200, 500)
-        r = self.r = rnd(2, 50)
+        r = self.r = rnd(5, 50)
 
-        self.v_x = rnd(-3, 2)
-        self.v_y = rnd(-3, 2)
+        self.v_x = rnd(-3, 2) / 2
+        self.v_y = rnd(-3, 2) / 2
 
-        self.live = 1
+        self.live = rnd(1, 5)
 
-        color = self.color = 'red'
+        color = self.color = ['green', 'green', 'yellow', 'orange', 'red'][self.live]
         canv.coords(self.id, x - r, y - r, x + r, y + r)
         canv.itemconfig(self.id, fill=color)
 
@@ -186,7 +187,6 @@ class target():
         """Попадание шарика в цель."""
         canv.coords(self.id, -10, -10, -10, -10)
         self.points += points
-        canv.itemconfig(self.id_points, text='')
 
     def move(self):
         """Отвечает за движение целей."""
@@ -202,7 +202,8 @@ class target():
 
         # Рисуем его на новых координатах.
         canv.coords(self.id, self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r)
-        canv.itemconfig(self.id, fill=self.color)
+        color = ['green', 'green', 'yellow', 'orange', 'red'][self.live]
+        canv.itemconfig(self.id, fill=color)
 
 
 class Background():
@@ -218,7 +219,7 @@ class Background():
 
         self.x = rnd(0, 750)
         self.y = rnd(610, 630)
-        color = self.color = 'green'
+        color = self.color = 'lawn green'
         canv.coords(self.id, self.x - self.weight, self.y - self.height, self.x + self.weight, self.y + self.height)
         canv.itemconfig(self.id, fill=color)
 
@@ -235,11 +236,11 @@ class Sunlight(Background):
 
     def sun(self):
         """Рисует солнышко."""
-        x = self.x = rnd(600, 780)
+        x = self.x = rnd(600, 700)
         y = self.y = rnd(20, 50)
         r = self.r = rnd(20, 50)
 
-        self.v_x = 1
+        self.v_x = 0.25
         self.v_y = 0
 
         color = self.color = 'yellow'
@@ -268,6 +269,143 @@ class Sunlight(Background):
         canv.coords(self.id, self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r)
 
 
+class tank():
+    def __init__(self):
+        x = self.x = 300
+        y = self.y = 550
+        self.alpha = 1
+        self.vx = 0
+        self.rootate = 1
+        self.live = 100
+        self.r = 30 * self.alpha
+
+        # Гусеница.
+        self.guslya = canv.create_oval(0, 0, 0, 0)
+
+        # Зададим фигуры катков:
+        self.id_wheel1 = canv.create_oval(0, 0, 0, 0)
+        self.id_wheel2 = canv.create_oval(0, 0, 0, 0)
+        self.id_wheel3 = canv.create_oval(0, 0, 0, 0)
+        self.id_wheel4 = canv.create_oval(0, 0, 0, 0)
+
+        # Зададим фигуры внутренних кружков катков.
+        self.id_IN_wheel1 = canv.create_oval(0, 0, 0, 0)
+        self.id_IN_wheel2 = canv.create_oval(0, 0, 0, 0)
+        self.id_IN_wheel3 = canv.create_oval(0, 0, 0, 0)
+        self.id_IN_wheel4 = canv.create_oval(0, 0, 0, 0)
+
+        # Тело танка.
+        self.body = canv.create_oval(0, 0, 0, 0)
+        # self.id_body = canv.create_rectangle(0, 0, 0, 0)
+        self.id_tower = canv.create_oval(0, 0, 0, 0)
+        self.id_oval = canv.create_oval(0, 0, 0, 0)
+
+        self.printing(x, y)
+
+    def print_wheel(self, id_wheel, id_IN_wheel, x, y, alpha):
+        """
+        Рисует колесо танка.
+
+        :param id_wheel: Колесо.
+        :param x, y: Координаты опорной точки танка
+        :param alpha: Коэфициент расшиения танка.
+        :param num: Номер колеса.
+        :return: Колесо.
+        """
+        r = 10 * alpha
+        r_IN = r / 3
+        canv.coords(id_wheel, x - r, y - r, x + r, y + r)
+        canv.itemconfig(id_wheel, fill='green')
+        canv.coords(id_IN_wheel, x - r_IN, y - r_IN , x + r_IN, y + r_IN)
+        canv.itemconfig(id_IN_wheel, fill='green')
+
+    def print_guslya(self, x, y, distance, alpha):
+        canv.coords(self.guslya, x - 2 * distance, y - 15 * alpha, x + 2 * distance, y + 15 * alpha)
+        canv.itemconfig(self.guslya, fill='black')
+
+    def print_body(self, x, y, distance, alpha):
+        y1 = y - 13 * alpha
+        canv.coords(self.body, x - 2 * distance, y1 - 19 * alpha, x + 2 * distance, y1 + 12 * alpha)
+        canv.itemconfig(self.body, fill='green')
+
+    def print_tower(self,  x, y, distance, alpha):
+        y1 = y - 33 * alpha
+        canv.coords(self.id_tower, x - 1 * distance, y1 - 19 * alpha, x + 1 * distance, y1 + 12 * alpha)
+        canv.itemconfig(self.id_tower, fill='khaki4')
+
+        x1 = x + distance / 2 + 4 * alpha
+        y2 = y1 - 4 * alpha
+
+        g1.y = y2
+        g1.x = x1
+
+        r = 13 * alpha
+        canv.coords(self.id_oval, x1 - r, y2 - r, x1 + r, y2 + r)
+        canv.itemconfig(self.id_oval, fill='khaki2')
+
+    def printing(self, x, y):
+        alpha = self.alpha
+        distance = 30 * alpha
+
+        # Рисуем катки.
+        self.print_wheel(self.id_wheel1, self.id_IN_wheel1, x - 1.5 * distance, y, alpha)
+        self.print_wheel(self.id_wheel2, self.id_IN_wheel2, x - 0.5 * distance, y, alpha)
+        self.print_wheel(self.id_wheel3, self.id_IN_wheel3, x + 0.5 * distance, y, alpha)
+        self.print_wheel(self.id_wheel4, self.id_IN_wheel4, x + 1.5 * distance, y, alpha)
+
+        # Рисуем гусеницу.
+        self.print_guslya(x, y, distance, alpha)
+
+        # Рисуем тело танка.
+        self.print_body(x, y, distance, alpha)
+
+        # Рисует башню.
+        self.print_tower(x, y, distance, alpha)
+
+    def move(self):
+        if 100 < self.x < 720:
+            self.x += self.vx
+            alpha = self.alpha
+            rootate = self.rootate
+            # Посчитаем константы.
+            distance = 30 * alpha
+            r = 10 * alpha
+            r_IN = r / 3
+            x = self.x
+            y = self.y
+
+            # Обновим координаты.
+            canv.coords(self.id_wheel1, x - 1.5 * distance - r, y - r, x - 1.5 * distance + r, y + r)
+            canv.coords(self.id_wheel2, x - 0.5 * distance - r, y - r, x - 0.5 * distance + r, y + r)
+            canv.coords(self.id_wheel3, x + 0.5 * distance - r, y - r, x + 0.5 * distance + r, y + r)
+            canv.coords(self.id_wheel4, x + 1.5 * distance - r, y - r, x + 1.5 * distance + r, y + r)
+
+            canv.coords(self.id_IN_wheel1, x - 1.5 * distance - r_IN, y - r_IN, x - 1.5 * distance + r_IN, y + r_IN)
+            canv.coords(self.id_IN_wheel2, x - 0.5 * distance - r_IN, y - r_IN, x - 0.5 * distance + r_IN, y + r_IN)
+            canv.coords(self.id_IN_wheel3, x + 0.5 * distance - r_IN, y - r_IN, x + 0.5 * distance + r_IN, y + r_IN)
+            canv.coords(self.id_IN_wheel4, x + 1.5 * distance - r_IN, y - r_IN, x + 1.5 * distance + r_IN, y + r_IN)
+
+            canv.coords(self.body, self.x - 2 * distance, self.y - 32 * alpha,
+                        self.x + 2 * distance, self.y - 1 * alpha)
+            canv.coords(self.guslya, self.x - 2 * distance, self.y - 15 * alpha,
+                        self.x + 2 * distance, self.y + 15 * alpha)
+
+            canv.coords(self.id_tower, x - 1 * distance, y - 52 * alpha, x + 1 * distance, y - 21 * alpha)
+            r = 13 * alpha
+            x1 = x + (distance / 2 + 4 * alpha) * rootate
+            y2 = y - 37 * alpha
+            canv.coords(self.id_oval, x1 - r, y2 - r, x1 + r, y2 + r)
+            # Передвинем пушку.
+            g1.x = x + (distance / 2 + 4 * alpha) * rootate
+
+    def move_left(self, event):
+        print(1)
+        if event.keysym == 'Key-a':
+            print(2)
+            self.vx = -1
+            self.rootate = -1
+
+
 targs = []  # Массив активных мишеней.
 for i in range(10):
     targs.append(target())
@@ -279,11 +417,14 @@ for i in range(10):
 screen1 = canv.create_text(400, 300, text='', font='28')
 g1 = gun()
 point = 0  # Счет.
+stop = 0  # Проверка на конец игры.
+
+tank = tank()  # Танк.
 
 
 def new_game(event=''):
     """ Запускает новую игру"""
-    global gun, targs, screen1, balls, bullet, dest_targs, point
+    global gun, targs, screen1, balls, bullet, dest_targs, point, stop
     for i in range(rnd(2, 10, 1)):
         targs[i].new_target()  # Создание цели.
 
@@ -292,9 +433,11 @@ def new_game(event=''):
     canv.bind('<Button-1>', g1.fire2_start)
     canv.bind('<ButtonRelease-1>', g1.fire2_end)
     canv.bind('<Motion>', g1.targetting)
+    canv.bind_all('<Key>', tank.move_left)
     id_points = canv.create_text(30, 30, text=point, font='28')
+    id_Lives  = canv.create_text(56, 50, text=point, font='28')
 
-    time_per_frames = 0.03  # Время между кадрами.
+    time_per_frames = 0.007  # Время между кадрами.
     for targ in targs:
         targ.live = 1  # Кол - во необходимых попаданий в первые мишени.
 
@@ -310,55 +453,61 @@ def new_game(event=''):
     sun.sun()
 
     while True:
-        # Переместим цели.
-        for targ in targs:
-            targ.move()
-        # Передвинем солнышко
-        sun.move()
-        sun.set_cords()
-        sun.changer_day_night()
-        # Переберем мячи из массива.
-        for b in balls:
-            #  Передвинем мяч.
-            b.move()
-
+        if stop == 0:
+            # Переместим цели.
             for targ in targs:
-                # Проверка на попадаения мяча в цель.
-                if b.hittest(targ) and targ.live:
-                    targ.live -= 1
+                targ.move()
+            # Передвинем солнышкою
+            sun.move()
+            sun.set_cords()
+            sun.changer_day_night()
+            # Передвинем танк.
+            tank.move()
+            # Обновим счет здоровья.
+            canv.itemconfig(id_Lives, text='Здоровье:' + str(tank.live))
+            # Обновим счет.
+            canv.itemconfig(id_points, text=str(point))
+            # Переберем мячи из массива.
+            for b in balls:
+                #  Передвинем мяч.
+                b.move()
 
-                # Проверяем сколько раз осталось попасть по мишени.
-                if targ.live == 0:
-                    targ.hit()  # Обработка попадания.
-                    targs.remove(targ)
+                for targ in targs:
+                    # Проверка на попадаения мяча в цель.
+                    if b.hittest(targ) and targ.live:
+                        targ.live -= 1
+                        b.live -= 1
+                        point += 1
 
+                    # Проверяем сколько раз осталось попасть по мишени.
+                    if targ.live == 0:
+                        targ.hit()  # Обработка попадания.
+                        canv.itemconfig(id_points, text=point)  # Обновим счет.
+                        targs.remove(targ)
+
+                # Проверка на необходимость убрать мяч.
+                if b.destroy() == 1:
+                    balls.remove(b)  # Убираем мяч.
+
+                if b.hittest(tank):
+                    tank.live -= 1
+                    b.live -= 1
+
+            # Нарисуем новую мишень, если более на поле нет снарядов.
             if len(targs) == 0:
-                # Выведем текст
-                canv.itemconfig(screen1, text='Вы уничтожили цели за ' + str(bullet) + ' выстрелов')
+                for i in range(rnd(2, 10, 1)):
+                    targs.append(dest_targs[i])  # Вернем мишень в массив
 
-            # Проверка на необходимость убрать мяч.
-            if b.destroy() == 1:
-                balls.remove(b)  # Убираем мяч.
-
-        # Сотрем надпись и нарисуем новую мишень, если более на поле нет снарядов.
-        if len(balls) == 0 and len(targs) == 0:
-            canv.itemconfig(screen1, text='')  # Сотрем надпись.
-            bullet = 0  # Обновим счетчик мячей.
-
-            point = dest_targs[0].points  # За эталон возьмем счет, посчитанный первым мячем, т к он появляется всегда.
-            canv.itemconfig(id_points, text=point)  # Обновим счет.
-
-            for i in range(rnd(2, 10, 1)):
-                targs.append(dest_targs[i])  # Вернем мишень в массив
-
-                targs[i].new_target()  # Нарисуем новую мишень.
+                    targs[i].new_target()  # Нарисуем новую мишень.
+            if tank.live <= 0:
+                canv.itemconfig(screen1, text='Игра закончена((( Потрачено: ' + str(bullet) + ' выстрелов \n' +
+                                'счет: ' + str(point))
+                stop = 1
 
         canv.update()  # Обновим кадр.
-        time.sleep(time_per_frames)  # Задержка позволяет установить ФПС на уровне ~30.
+        time.sleep(time_per_frames)  # Задержка позволяет установить ФПС на уровне ~120.
         g1.targetting()  # Наведем пушку на курор.
         g1.power_up()  # Увеличим начальную скорость снаряда, если зажата мышь.
-
-    canv.itemconfig(screen1, text='')
 
 
 if __name__ == '__main__':
