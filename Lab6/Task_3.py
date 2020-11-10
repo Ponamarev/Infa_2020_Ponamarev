@@ -21,6 +21,7 @@ class ball():
         y - начальное положение мяча по вертикали
         """
         self.delete = 0
+        self.delete_point = 0  # Нужна, чтобы пули и пулемета удалялись быстрее.
         self.x = x
         self.y = y
         self.r = 10
@@ -38,7 +39,7 @@ class ball():
         self.live = rnd(1, 10)
 
     def destroy(self):
-        """Проверяет необходимость удаления мяча из списка мячейю
+        """Проверяет необходимость удаления мяча из списка мячей.
            Возращает 1, если нужно убрать, 0 если не нужно"""
         if self.live == 0 or self.delete == 1:
             canv.delete(self.id)
@@ -73,7 +74,7 @@ class ball():
         if self.y - self.vy > 556:
             self.vy = 0
 
-        if abs(self.vy) == 0 and abs(self.vy) == 0:
+        if (self.vx ** 2 + self.vy ** 2) <= self.delete_point ** 2:
             self.delete = 1
 
         self.x += self.vx
@@ -96,10 +97,39 @@ class ball():
             return False
 
 
+class miniball(ball):
+    """
+    Этот класс создает снаряды меньшего размера, меньших очков здоровья, но с улучшенными динамическими характеристиками.
+    """
+    def __init__(self, x, y):
+        global point
+        self.delete = 0
+        self.delete_point = 0.1  # Нужна, чтобы пули и пулемета удалялись быстрее.
+        self.x = x
+        self.y = y
+        self.r = 5
+        self.vx = 0
+        self.vy = 0
+        self.g = 0.09  # Ускорение свободного падения.
+        self.color = 'black'
+        self.id = canv.create_oval(
+            self.x - self.r,
+            self.y - self.r,
+            self.x + self.r,
+            self.y + self.r,
+            fill=self.color
+        )
+        self.live = rnd(1, 5)
+        if point > 0:
+            point -= 1
+
+
 class gun():
     def __init__(self):
         self.f2_power = 10
+        self.f3_power = 10
         self.f2_on = 0
+        self.f3_on = 0
         self.an = 1
 
         # Координаты пушки. # Перезаписываются в классе tank.
@@ -112,21 +142,43 @@ class gun():
         """Запускает снаряд"""
         self.f2_on = 1
 
+    def fire3_start(self, event):
+        """Запускает снаряд"""
+        self.f3_on = 1
+
     def fire2_end(self, event):
         """Выстрел мячом.
         Происходит при отпускании кнопки мыши.
         Начальные значения компонент скорости мяча vx и vy зависят от положения мыши.
         """
         global balls, bullet
-        bullet += 1
-        new_ball = ball(self.x, self.y)
-        new_ball.r += 5
-        # Зададим скорости снаряду.
-        new_ball.vx = self.f2_power * math.cos(self.an) / 3
-        new_ball.vy = - self.f2_power * math.sin(self.an) / 3
-        balls += [new_ball]
-        self.f2_on = 0
-        self.f2_power = 10
+        if self.f2_on == 1:
+            bullet += 1
+            new_ball = ball(self.x, self.y)
+            new_ball.r += 5
+            # Зададим скорости снаряду.
+            new_ball.vx = self.f2_power * math.cos(self.an) / 3
+            new_ball.vy = - self.f2_power * math.sin(self.an) / 3
+            balls += [new_ball]
+            self.f2_on = 0
+            self.f2_power = 10
+
+    def fire3_end(self, event):
+        """Выстрел мячом.
+        Происходит при отпускании кнопки мыши.
+        Начальные значения компонент скорости мяча vx и vy зависят от положения мыши.
+        """
+        global balls, bullet
+        if self.f3_on == 1:
+            bullet += 1
+            new_ball = miniball(self.x, self.y)
+            new_ball.r += 5
+            # Зададим скорости снаряду.
+            new_ball.vx = self.f3_power * math.cos(self.an) / 3
+            new_ball.vy = - self.f3_power * math.sin(self.an) / 3
+            balls += [new_ball]
+            self.f3_on = 0
+            self.f3_power = 10
 
     def targetting(self, event=0):
         """Прицеливание. Зависит от положения мыши."""
@@ -147,7 +199,7 @@ class gun():
             elif tank.rootate == -1 and -0.5 * math.pi <= self.an <= 0.5 * math.pi:
                 self.an = 1.5 * math.pi
 
-        if self.f2_on:
+        if self.f2_on or self.f3_on:
             canv.itemconfig(self.id, fill='orange')
 
         else:
@@ -160,9 +212,12 @@ class gun():
 
     def power_up(self):
         """Увеличавает начальную скорость снаряда, пока зажата мышь, и он еще не запущен"""
-        if self.f2_on:
-            if self.f2_power < 50:
-                self.f2_power += 3 / 4
+        if self.f2_on or self.f3_on:
+            if self.f2_power < 50 and self.f2_on:
+                self.f2_power += 0.75
+
+            if self.f3_power < 50 and self.f3_on:
+                self.f3_power += 1.5
 
             canv.itemconfig(self.id, fill='orange')
 
@@ -409,12 +464,12 @@ class tank():
 
     def move_left(self, event):
         if event.keysym == 'Left':
-            self.vx -= 1
+            # self.vx -= 1 # Сейчас не используется.
             self.x -= 5
             if self.vx <= 0:
                 self.rootate = -1
         if event.keysym == 'Right':
-            self.vx += 1
+            # self.vx += 1
             self.x += 5
             if self.vx >= 0:
                 self.rootate = 1
@@ -445,7 +500,9 @@ def new_game(event=''):
     bullet = 0  # Кол - во попаданий по мишени.
     balls = []  # Массив шаров.
     canv.bind('<Button-1>', g1.fire2_start)
+    canv.bind('<Button-3>', g1.fire3_start)
     canv.bind('<ButtonRelease-1>', g1.fire2_end)
+    canv.bind('<ButtonRelease-3>', g1.fire3_end)
     canv.bind('<Motion>', g1.targetting)
     canv.bind_all('<Key>', tank.move_left)
     id_points = canv.create_text(30, 30, text=point, font='28')
