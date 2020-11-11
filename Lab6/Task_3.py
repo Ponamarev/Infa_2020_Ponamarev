@@ -21,7 +21,7 @@ class ball():
         y - начальное положение мяча по вертикали
         """
         self.delete = 0
-        self.delete_point = 0  # Нужна, чтобы пули и пулемета удалялись быстрее.
+        self.delete_point = 0.7  # Нужна, чтобы пули и пулемета удалялись быстрее.
         self.x = x
         self.y = y
         self.r = 10
@@ -80,7 +80,7 @@ class ball():
         self.x += self.vx
         self.y -= self.vy
         self.set_coords()
-        self.vx *= 0.998
+        self.vx *= 0.995
         self.vy *= 0.995
 
     def hittest(self, obj):
