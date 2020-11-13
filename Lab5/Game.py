@@ -57,6 +57,8 @@ x_rocket = 0  # Координата ракеты.
 y_rocket = 0  # Координата ракеты.
 ancle = 0  # Угол наклона ракеты.
 max_num_of_balls_colour = 5  # Нужно, чтобы менять цвета шариков.
+Rocket_in_order = 0  # Очередь запуска вражеских рокет.
+frame_from_last_start = 0 # Счетчик времени в кадрах с момента последнего запуска.
 
 
 def new_ball(x, y, r):
@@ -533,6 +535,13 @@ def searching():
                 array_of_stores[num_in_arr] = str(Store_User)  # Кладет в массив данных рекорд.
                 saver()  # Сохраняет данные.
 
+    try:
+        text1 = Label(Window, text='Неверный логин или пароль')
+        text1.grid(column=1, row=5)
+        
+    except:
+        pass
+
 
 def Space_print():
     """
@@ -674,7 +683,7 @@ def text_store(store):
     :return: None
     """
     font = pygame.font.Font(None, 30)  # Задает шрифт.
-    text = font.render("РЕКОРД: " + str(Store_User) + "\nСчет: " + str(store), True, (255, 255, 255))
+    text = font.render("РЕКОРД: " + str(Store_User) + "\nСчет: " + str(int(store)), True, (255, 255, 255))
     screen.blit(text, [50, 50])  # Добавляет текст на экран на координатах 50, 50.
 
 
@@ -709,6 +718,8 @@ def main():
     """
     global frame, Space_load, is_rocket_on, is_rocketE_on, max_num_of_balls_colour, White1, Space_load
     Rocket_chanse = 5000
+    frame_from_last_start = 0
+    Rocket_in_order = 0
 
     pygame.display.update()
     clock = pygame.time.Clock()
@@ -733,7 +744,8 @@ def main():
                     Space_load -= 50
 
             # Включить гимн СССР.
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_s:
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_s \
+                    and log_User == "evgeny" and pas_User == "123123":
                 USSR()
                 Rocket_chanse = 1000
                 max_num_of_balls_colour = 0
@@ -758,7 +770,15 @@ def main():
 
         # Примерно раз в минуту enemy тоже умеет пускать ракету.
         if randint(1, Rocket_chanse) == 1:
-            is_rocketE_on = 2
+            Rocket_in_order += 1
+        # Ракеты помещаются в очередь, которая тратится по мере долетания ракет.
+
+        if frame_from_last_start > 440 and Rocket_in_order > 0:
+            Rocket_in_order -= 1 # Возьмем ракету из очереди.
+            is_rocketE_on = 2  # Запуск ракеты.
+            frame_from_last_start = 0 # Обнулим счетчик.
+
+        frame_from_last_start += 1  # Cчетчик кол-во кадров, прошедших с прошлого старта.
 
         # Проверка клика enemy.
         enemy_click()
@@ -776,6 +796,7 @@ def main():
 
         print_ball()
 
+
 if __name__ == "__main__":
 
     try:  # Принимает данные из файла. Если его нет, создает файл.
@@ -785,4 +806,4 @@ if __name__ == "__main__":
 
     indificate()  # Запускает окно регистрации.
     Window.mainloop()  # Открывает это окно.
-    # main()  # Добавлено, для ыключения без регистрации.
+    # main()  # Добавлено, для включения без регистрации.
