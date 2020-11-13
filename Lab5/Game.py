@@ -538,7 +538,7 @@ def searching():
     try:
         text1 = Label(Window, text='Неверный логин или пароль')
         text1.grid(column=1, row=5)
-        
+
     except:
         pass
 
@@ -774,9 +774,9 @@ def main():
         # Ракеты помещаются в очередь, которая тратится по мере долетания ракет.
 
         if frame_from_last_start > 440 and Rocket_in_order > 0:
-            Rocket_in_order -= 1 # Возьмем ракету из очереди.
+            Rocket_in_order -= 1  # Возьмем ракету из очереди.
             is_rocketE_on = 2  # Запуск ракеты.
-            frame_from_last_start = 0 # Обнулим счетчик.
+            frame_from_last_start = 0  # Обнулим счетчик.
 
         frame_from_last_start += 1  # Cчетчик кол-во кадров, прошедших с прошлого старта.
 
