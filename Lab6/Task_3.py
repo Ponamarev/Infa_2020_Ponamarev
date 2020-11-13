@@ -315,7 +315,7 @@ class Sunlight(Background):
 
         # Столкновения со стенами.
 
-        if self.x > 750 or self.x < 0:
+        if self.x > 750 or self.x < 150 + self.r:
             self.v_x *= -1
             self.isDay *= -1
             if self.color == 'yellow':
