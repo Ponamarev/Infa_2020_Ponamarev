@@ -139,17 +139,28 @@ class gun():
         self.id = canv.create_line(self.x, self.y, self.x + 30, self.y - 30, width=7)
 
     def fire2_start(self, event):
-        """Запускает снаряд"""
+        """
+        Запускает снаряд
+        :param event:  Массив событий, созданный pygame.
+        :return: меняет переменную, проверка которой запустит выстрел.
+        """
         self.f2_on = 1
 
     def fire3_start(self, event):
-        """Запускает снаряд"""
+        """
+        Запускает снаряд
+        :param event:  Массив событий, созданный pygame.
+        :return: меняет переменную, проверка которой запустит выстрел.
+        """
         self.f3_on = 1
 
     def fire2_end(self, event):
-        """Выстрел мячом.
+        """
+        Выстрел мячом.
         Происходит при отпускании кнопки мыши.
         Начальные значения компонент скорости мяча vx и vy зависят от положения мыши.
+        :param event:  Массив событий, созданный pygame.
+        :return: Оканчивает выстрел и спавнит снаряд на месте пушки.
         """
         global balls, bullet
         if self.f2_on == 1:
@@ -164,9 +175,12 @@ class gun():
             self.f2_power = 10
 
     def fire3_end(self, event):
-        """Выстрел мячом.
+        """
+        Выстрел мячом.
         Происходит при отпускании кнопки мыши.
         Начальные значения компонент скорости мяча vx и vy зависят от положения мыши.
+        :param event:  Массив событий, созданный pygame.
+        :return: Оканчивает выстрел и спавнит снаряд на месте пушки.
         """
         global balls, bullet
         if self.f3_on == 1:
@@ -181,7 +195,11 @@ class gun():
             self.f3_power = 10
 
     def targetting(self, event=0):
-        """Прицеливание. Зависит от положения мыши."""
+        """
+        Прицеливание. Зависит от положения мыши.
+        :param event:  Массив событий, созданный pygame.
+        :return:  Наводит пушку на курсор.
+        """
         if event:
             # Получает угол, на который няжно повернуть пушку, чтобы она была направлена на курсор.
             self.an = math.atan((event.y - self.y) / (event.x - self.x))
@@ -211,7 +229,10 @@ class gun():
                     )
 
     def power_up(self):
-        """Увеличавает начальную скорость снаряда, пока зажата мышь, и он еще не запущен"""
+        """
+        Увеличавает начальную скорость снаряда, пока зажата мышь, и он еще не запущен
+        :return:  Увеличивает переменную power для того вида снарядов, которым ведется выстрел.
+        """
         if self.f2_on or self.f3_on:
             if self.f2_power < 50 and self.f2_on:
                 self.f2_power += 0.75
@@ -463,11 +484,17 @@ class tank():
             g1.x = x + (distance / 2 + 4 * alpha) * rootate
 
     def move_left(self, event):
+        """
+        Отвечает за движение танка.
+        :param event:  Массив событий, созданный pygame.
+        :return: Меняет координаты танка и разворачивает его в сторну движения.
+        """
         if event.keysym == 'Left':
             # self.vx -= 1 # Сейчас не используется.
             self.x -= 5
             if self.vx <= 0:
                 self.rootate = -1
+
         if event.keysym == 'Right':
             # self.vx += 1
             self.x += 5
@@ -492,7 +519,11 @@ tank = tank()  # Танк.
 
 
 def new_game(event=''):
-    """ Запускает новую игру"""
+    """
+    Запускает новую игру.
+    :param event: Задаем переменную, в которой по прошествии времени будет лежать массив событий, созданный pygame.
+    :return: Игру.
+    """
     global gun, targs, screen1, balls, bullet, dest_targs, point, stop
     for i in range(rnd(2, 10, 1)):
         targs[i].new_target()  # Создание цели.
