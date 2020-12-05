@@ -105,12 +105,12 @@ class Shell():
         pygame.draw.circle(screen, (193, 0, 0), (int(550 - self.L * 2500), 223), 3, 0)
 
 
-count_of_points = 10000
-delta_time = 1 / 100000000  # с.
+count_of_points = 100000
+delta_time = 1 / 10000000  # с.
 left_points = []
 right_points = []
 lenght_of_gun = 0.10  # м.
-weight_of_gun = 0.030  # кг.
+weight_of_gun = 11.030  # кг.
 k = 10 / 0.2  # Н / м.
 frame = 0
 finished = False

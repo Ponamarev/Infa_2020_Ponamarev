@@ -186,6 +186,7 @@ class target():
         self.points += points
         canv.itemconfig(self.id_points, text='')
 
+
 targs = []  # Массив активных мишеней.
 for i in range(10):
     targs.append(target())
@@ -197,7 +198,6 @@ for i in range(10):
 screen1 = canv.create_text(400, 300, text='', font='28')
 g1 = gun()
 point = 0  # Счет.
-
 
 
 def new_game(event=''):
@@ -257,8 +257,6 @@ def new_game(event=''):
         time.sleep(time_per_frames)  # Задержка позволяет установить ФПС на уровне ~30.
         g1.targetting()  # Наведем пушку на курор.
         g1.power_up()  # Увеличим начальную скорость снаряда, если зажата мышь.
-
-    canv.itemconfig(screen1, text='')
 
 
 if __name__ == '__main__':
