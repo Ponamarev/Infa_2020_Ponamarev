@@ -42,7 +42,7 @@ class PausePage(MenuPage):
         super().__init__(canvas, root, 3, wight_of_screen, height_of_screen)
         self.root.bind('<Key>', tkinter.NONE, add='')
         self.root.bind('<Escape>', self.activation, add='')
-        self.game = gameplay.game.Game(self.canv, self.root)
+        self.game = gameplay.game.Game(self.canv, self.root, wight_of_screen, height_of_screen)
         self.state = False
 
     def update(self, time):
@@ -57,6 +57,7 @@ class PausePage(MenuPage):
                 new_save = open(saves_directory + save_num + ".txt", 'w+')
                 text = self.game.give_param()
                 new_save.write(text)
+                new_save.close()
 
             elif self.go == 2:
                 start_menu = StartPage(self.canv, self.root, self.weight, self.height)
