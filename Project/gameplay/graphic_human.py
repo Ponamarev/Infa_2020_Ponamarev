@@ -6,6 +6,11 @@ import tkinter
 
 class Player_image():
     def __init__(self, root, canv):
+        """
+        Это конструктор класса, отвечающего за рисование текстуры игрока.
+        :param root: Окно, на котором рисуется игра.
+        :param canv: Холст, на котором рисуется игрок.
+        """
         self.x = 100
         self.y = 90
         self.size = 15
@@ -27,6 +32,12 @@ class Player_image():
         self.last_animate = 0
 
     def body(self, x, y, k):
+        """
+        Рисует тело игрока (Голову, и туловище).
+        :param x и y: Координаты центр головы.
+        :param k: Коэфицент расширения.
+        :return: None
+        """
         self.canv.coords(self.neck_obj,
                          x - k, y + 2 * k, x + k, y + 6 * k,
                          )
@@ -40,6 +51,13 @@ class Player_image():
                          )
 
     def right_hand(self, x, y, k, alpha_right):
+        """
+        Рисует правую руку.
+        :param x и y: Координаты правой верхней точки руки.
+        :param k:  Коэфицент расширения.
+        :param alpha_right: Угол поворота (положительный поворачивает вправо).
+        :return: None
+        """
         self.canv.coords(self.right_hand_obj,
                          x - 6 * k, y + 8 * k,
                          x - 6 * k + 2 * k * math.cos(alpha_right), y + 8 * k + 2 * k * math.sin(alpha_right),
@@ -49,6 +67,13 @@ class Player_image():
                          )
 
     def left_hand(self, x, y, k, alpha_left):
+        """
+        Рисует левую руку.
+        :param x и y: Координаты левой верхней точки руки.
+        :param k:  Коэфицент расширения.
+        :param alpha_left: Угол поворота (положительный поворачивает влево).
+        :return: None
+        """
         self.canv.coords(self.left_hand_obj,
                          x + 6 * k, y + 8 * k,
                          x + 6 * k - 2 * k * math.cos(alpha_left), y + 8 * k + 2 * k * math.sin(alpha_left),
@@ -58,6 +83,13 @@ class Player_image():
                          )
 
     def right_leg(self, x, y, k, beta_right):
+        """
+        Рисует правую ногу.
+        :param x и y: Координаты правой верхней точки ноги.
+        :param k:  Коэфицент расширения.
+        :param beta_right:  Угол поворота (положительный поворачивает вправо).
+        :return:  None
+        """
         self.canv.coords(self.right_leg_obj,
                          x - 3 * k, y + 16 * k,
                          x - 3 * k + 3 * k * math.cos(beta_right), y + 16 * k + 3 * k * math.sin(beta_right),
@@ -67,6 +99,13 @@ class Player_image():
                          )
 
     def left_leg(self, x, y, k, beta_left):
+        """
+        Рисует левую ногу.
+        :param x и y: Координаты левой верхней точки ноги.
+        :param k:  Коэфицент расширения.
+        :param beta_left:  Угол поворота (положительный поворачивает влево).
+        :return:  None
+        """
         self.canv.coords(self.left_leg_obj,
                          x + 3 * k, y + 16 * k,
                          x + 3 * k - 3 * k * math.cos(beta_left), y + 16 * k + 3 * k * math.sin(beta_left),
@@ -76,6 +115,10 @@ class Player_image():
                          )
 
     def draw_human(self):
+        """
+        Перерисовывает текстуру игрока.
+        :return:  None
+        """
         self.body(self.x, self.y, self.size)
         self.right_hand(self.x, self.y, self.size, self.params[0])
         self.left_hand(self.x, self.y, self.size, self.params[1])
@@ -84,6 +127,10 @@ class Player_image():
         self.root.after(50, self.animate_move)
 
     def animate_move(self):
+        """
+        отвечает за анимацию игрока.
+        :return:  None
+        """
         if self.animate_on == 0:
             self.params = [1, 1, 0, 0]
             self.draw_human()
@@ -113,7 +160,7 @@ class Player_image():
 
 if __name__ == '__main__':
     print("Это модуль не для отдельного запуска. \nВключен режим тестирования.")
-    #TODO ввод номера анимации.
+
     canv = tkinter.Canvas(
         width=wight_of_screen,
         height=height_of_screen,
@@ -121,10 +168,14 @@ if __name__ == '__main__':
         highlightthickness=0
     )
     canv.pack()
-
     root = tkinter.Tk()
     root.geometry('{}x{}'.format(str(wight_of_screen), str(height_of_screen)))
     p = Player_image(root, canv)
-    p.draw_human()
 
+    print("Введите номер анимации для показа.\nТанец: 1.\nУдар в обе стороны: 2.")
+    p.animate_on = int(input())
+    # Проверим ввод на правильность.
+    assert -1 < p.animate_on < 3 and p.animate_on % 1 == 0, "Введите целое число от 0 до 2"
+
+    p.draw_human()
     root.mainloop()
