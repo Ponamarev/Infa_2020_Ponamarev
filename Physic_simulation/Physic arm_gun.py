@@ -1,5 +1,6 @@
 import tkinter
 import pygame
+import numba
 
 
 pygame.init()  # Инициализация Pygame.
@@ -104,11 +105,11 @@ class Shell():
 
 
 count_of_points = 10
-delta_time = 1 / 100000000000000  # с.
+delta_time = 1 / 100000000000  # с.
 left_points = []
 right_points = []
 lenght_of_gun = 0.10  # м.
-weight_of_gun = 0.00000000000000000000030  # кг.
+weight_of_gun = 0.0000030  # кг.
 k = 10 / 0.1  # Н / м.
 frame = 0
 finished = False
