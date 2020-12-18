@@ -1,10 +1,10 @@
 import math
 from graphic import *
-from Settings import *
+from settings import *
 import tkinter
 
 
-class Player_image():
+class PlayerImage():
     def __init__(self, root, canv):
         """
         Это конструктор класса, отвечающего за рисование текстуры игрока.
@@ -13,7 +13,7 @@ class Player_image():
         """
         self.x = 100
         self.y = 90
-        self.size = 15
+        self.size = player_size
         self.params = [1, 1, 0, 0]
         self.root = root
         self.canv = canv
@@ -28,7 +28,7 @@ class Player_image():
         self.body_obj = canv.create_polygon(0, 0, 0, 0, fill=self.color, outline=self.color_of_outline)
         self.head_obj = canv.create_oval(0, 0, 0, 0, fill=self.color_of_body, outline=self.color_of_outline)
         self.neck_obj = canv.create_rectangle(0, 0, 0, 0, fill=self.color_of_body, outline=self.color_of_body)
-        self.animate_on = 2
+        self.animate_on = 0
         self.last_animate = 0
 
     def body(self, x, y, k):
@@ -124,25 +124,32 @@ class Player_image():
         self.left_hand(self.x, self.y, self.size, self.params[1])
         self.right_leg(self.x, self.y, self.size, self.params[2])
         self.left_leg(self.x, self.y, self.size, self.params[3])
-        self.root.after(50, self.animate_move)
+
+    def __test_draw__(self):
+        """
+        Запускает выбранную тестировщиком анмацию.
+        :return: None
+        """
+        self.animate_move()
+        self.root.after(50, self.__test_draw__)
 
     def animate_move(self):
         """
-        отвечает за анимацию игрока.
+        Отвечает за анимацию игрока.
         :return:  None
         """
         if self.animate_on == 0:
             self.params = [1, 1, 0, 0]
-            self.draw_human()
 
         elif self.animate_on == 1:
+            if self.fr > 20:
+                self.animate_on = 0
             self.fr += 1
             self.params[0] = 0.6 + math.sin(self.fr / 10)
             self.params[1] = 0.6 + math.sin(self.fr / 10)
             self.params[2] = 0 + math.sin(self.fr / 10) / 3
             self.params[3] = 0 + math.sin(self.fr / 10) / 3
             self.last_animate = self.animate_on
-            self.draw_human()
 
         elif self.animate_on == 2:
             if self.last_animate != self.animate_on:
@@ -155,7 +162,8 @@ class Player_image():
             self.params[2] = 0 + math.sin(self.fr / 3) / 3
             self.params[3] = 0 + math.sin(self.fr / 3) / 3
             self.last_animate = self.animate_on
-            self.draw_human()
+
+        self.draw_human()
 
 
 if __name__ == '__main__':
@@ -170,12 +178,12 @@ if __name__ == '__main__':
     canv.pack()
     root = tkinter.Tk()
     root.geometry('{}x{}'.format(str(wight_of_screen), str(height_of_screen)))
-    p = Player_image(root, canv)
+    p = PlayerImage(root, canv)
 
     print("Введите номер анимации для показа.\nТанец: 1.\nУдар в обе стороны: 2.")
     p.animate_on = int(input())
     # Проверим ввод на правильность.
     assert -1 < p.animate_on < 3 and p.animate_on % 1 == 0, "Введите целое число от 0 до 2"
 
-    p.draw_human()
+    p.__test_draw__()
     root.mainloop()

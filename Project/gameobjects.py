@@ -5,20 +5,59 @@ import gameplay.graphic_human
 # abstract class (using in this module only)
 class ActiveObject(object):
     def __init__(self, canvas, tag, coords):
+        """
+        Это конструктор класса живых объектов.
+        :param canvas: Окно, на котором рисуется игра.
+        :param tag: Тэг к которому присваевается живой обьект.
+        :param coords: Координаты объекта [x, y].
+        """
         self.canv = canvas
         self.tag = tag
         self.coords = coords
-        self.heet_box = None
+        self.hit_box = None
+        self.damage_hitbox = None
+        self.health_points = 100
+        self.damage = None
+        self.exp_plus = None
     
     def update(self):
         return self
 
-    def draw_self(self):
+    def image_self(self):
+        pass
+
+
+class PassiveObject(object):
+    def __init__(self, canvas, tag, coords):
+        """
+        Это конструктор класса живых объектов.
+        :param canvas: Окно, на котором рисуется игра.
+        :param tag: Тэг к которому присваевается живой обьект.
+        :param coords: Координаты объекта [x, y].
+        """
+        self.canv = canvas
+        self.tag = tag
+        self.coords = coords
+        self.damage_hitbox = None
+        self.health_points = 100
+        self.exp_plus = None
+
+    def update(self):
+        return self
+
+    def image_self(self):
         pass
 
 
 class Player(ActiveObject):
-    def __init__(self, canvas, root, coords=[150, 150], tag="player"):
+    def __init__(self, canvas, root, coords = [150, 150], tag="player"):
+        """
+        Это конструктор класса игрока.
+        :param canvas: Холст, на котором рисуется игрок.
+        :param root: Окно, на котором рисуется игра.
+        :param coords:
+        :param tag:
+        """
         super().__init__(canvas, tag, coords)
         self.speed = 5
         self.health_points = 100
@@ -27,24 +66,18 @@ class Player(ActiveObject):
         self.dict_controlers_but = {'w': (0, 1),  'a': (-1, 0),
                                     's': (0, -1), 'd': (1, 0)}
         self.root = root
+        self.pressed_but = None
+        # [delta_x, delta_y, attack, interaction]
+        deltas = [0, 0, False, False]
+        self.x = self.coords[0]
+        self.y = self.coords[1]
+        self.current_mode = 0
+        self.id = gameplay.graphic_human.PlayerImage(root, canvas)
         self.root.bind('<KeyPress-space>', self.pressing('space'))
         for key in self.controlers_but:
             self.root.bind(key, self.pressing)
         for key in self.controlers_but:
             self.root.bind(key, self.unpressing(key))
-        self.pressed_but = None
-        self.delta_x = 0
-        self.delta_y = 0
-        x = self.coords[0]
-        y = self.coords[1]
-        self.current_mode = 0
-        k = 100
-        self.id = self.canv.create_rectangle(
-            x, y, x + k, y + 2*k,
-            fill='red',
-            outline='green',
-            tag=self.tag
-        )
 
     def pressing(self,  event=tkinter.NONE):
         """
@@ -65,9 +98,9 @@ class Player(ActiveObject):
     def step(self, event=tkinter.NONE):
         if self.pressed_but in self.controlers_but:
             way = self.dict_controlers_but.get(self.pressed_but)
-            velocity_x = self.speed * way[0]
-            velocity_y = self.speed * way[1]
-            self.canv.move(self.tag, velocity_x, velocity_y)
+            self.x += self.speed * way[0]
+            self.y += self.speed * way[1]
+        self.id.draw_human()
         self.root.after(50, self.step)
     
     def attack(self):
@@ -78,7 +111,8 @@ class Player(ActiveObject):
         Рисует игрока.
         :return:
         """
-        pass
+        self.id.x, self.id.y = self.x, self.y
+        self.id.draw_human()
 
 
 class Enemy(ActiveObject):
