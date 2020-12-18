@@ -27,7 +27,7 @@ class ActiveObject(object):
         return self
 
     def image_self(self):
-        self.draw()
+        pass
 
 
 class PassiveObject(object):
@@ -44,11 +44,17 @@ class PassiveObject(object):
         self.damage_hitbox = None
         self.health_points = 100
         self.exp_plus = None
+        self.x = coords[0]
+        self.y = coords[1]
 
     def update(self):
         return self
 
     def image_self(self):
+        """
+        Рисует обьект.
+        :return: None
+        """
         pass
 
 
@@ -58,8 +64,8 @@ class Player(ActiveObject):
         Это конструктор класса игрока.
         :param canvas: Холст, на котором рисуется игрок.
         :param root: Окно, на котором рисуется игра.
-        :param coords:
-        :param tag:
+        :param coords: координаты опроной точки.
+        :param tag: тэг для обрщения.
         """
         super().__init__(canvas, tag, coords)
         self.speed = 5
@@ -79,6 +85,7 @@ class Player(ActiveObject):
         self.pressed_but = None
         # [delta_x, delta_y, attack, interaction]
         deltas = [0, 0, False, False]
+        self.is_move = False
         self.x = self.coords[0]
         self.y = self.coords[1]
         self.current_mode = 0
@@ -97,27 +104,45 @@ class Player(ActiveObject):
         """
         if event.char in self.controlers_but:
             self.pressed_but = event.char
-            self.step()
+            if not self.is_move:
+                self.step()
 
     def unpressing(self, event=tkinter.NONE):
+        """
+        Обрабатывает отжатие кнопки.
+        :param event: События Tkinter.
+        :return: None
+        """
+        if self.pressed_but in self.controlers_but:
+            self.is_move = False
         self.pressed_but = None
 
     def step(self, event=tkinter.NONE):
+        """
+        Обрабатывает перемещения игрока.
+        :param event: События Tkinter.
+        :return: None
+        """
         if self.pressed_but in self.controlers_but:
+            self.is_move = True
             self.id.animate_on = 1
             way = self.dict_controlers_but.get(self.pressed_but)
             self.x += self.speed * way[0]
             self.y += self.speed * way[1]
-        self.root.after(100, self.step)
+            self.root.after(100, self.step)
         self.image_self()
 
     def attack(self):
+        """
+        Ответчает за атаку.
+        :return:  None
+        """
         pass
 
     def image_self(self):
         """
         Рисует игрока.
-        :return:
+        :return:  None
         """
         self.id.x, self.id.y = self.x, self.y
         self.id.animate_move()
@@ -125,8 +150,15 @@ class Player(ActiveObject):
 
 class House(PassiveObject):
     def __init__(self, canvas, tag, coords):
+        """
+        Это класс дома.
+        :param canvas: Холст, на котором рисуется игра.
+        :param coords: координаты опроной точки.
+        :param tag: тэг для обрщения.
+        """
         super().__init__(canvas, tag, coords)
         self.canv = canvas
+
         self.wall_obj = self.canv.create_rectangle(0, 0, 0, 0, fill='saddle brown', outline='black')
         self.lines_of_walls_endings = []
         for i in range(30, 150, 10):
@@ -138,15 +170,23 @@ class House(PassiveObject):
         self.window_endings = []
         for i in range(4):
             self.window_endings.append(self.canv.create_rectangle(0, 0, 0, 0, fill='light blue', outline='black'))
-        self.draw()
 
-    def draw(self):
-
-        self.wall(150, 100, 2)
-        self.window(150, 100, 2)
-        self.roof(150, 100, 2)
+    def image_self(self):
+        """
+        Рисует обьект.
+        :return: None
+        """
+        self.wall(self.x, self.y, player_size / 1.5)
+        self.window(self.x, self.y, player_size / 1.5)
+        self.roof(self.x, self.y, player_size / 1.5)
 
     def wall(self, x, y, k):
+        """
+        Обновляет координаты объектов.
+        :param x и y: новая опорная точка.
+        :param k: Коэфицент расширения.
+        :return:  None
+        """
         self.canv.coords(self.wall_obj,
                       x - 60 * k, y + 30 * k, x + 60 * k, y + 150 * k
                       )
@@ -156,6 +196,12 @@ class House(PassiveObject):
                           )
 
     def roof(self, x, y, k):
+        """
+        Обновляет координаты объектов.
+        :param x и y: новая опорная точка.
+        :param k: Коэфицент расширения.
+        :return:  None
+        """
         self.canv.coords(self.roof_endings,
             x, y, x + 65 * k, y + 30 * k,
                   x - 65 * k, y + 30 * k,
@@ -168,6 +214,12 @@ class House(PassiveObject):
         )
 
     def window(self, x, y, k):
+        """
+        Обновляет координаты объектов.
+        :param x и y: новая опорная точка.
+        :param k: Коэфицент расширения.
+        :return:  None
+        """
         self.canv.coords(self.house_window,
             x - 20 * k, y + 70 * k, x + 20 * k, y + 110 * k,
         )
@@ -202,6 +254,8 @@ def __test__():
     ex = Player(canv, root, coords=[150, 150])
     root.geometry("500x500+300+300")
     ex.image_self()
+    ex1 = House(canv, root, coords=[330, 80])
+    ex1.image_self()
     root.mainloop()
 
 
