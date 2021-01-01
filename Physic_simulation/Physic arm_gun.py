@@ -103,7 +103,7 @@ def main(count_of_points, delta_time):
     :param count_of_points: количество точек, на которое бьтся резинка рогатки.
     :param delta_time: время, за которое считаются малые перемещения обьектов.
     """
-    global k
+    global k, right_points
     right_points = []
     frame = 0
     finished = False
@@ -140,22 +140,22 @@ def main(count_of_points, delta_time):
         # Выполним передвижние снаряда.
         shell.move_shell(delta_time, count_of_points)
 
-        if frame >= 10000:
-            frame = 0
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    finished = True
-
-            screen.fill((0, 0, 0))
-
-            for num in range(50):
-                num_of_point = int(count_of_points / 50 * num)
-                right_points[num_of_point].print_point()
-            shell.print_shell()
-            pygame.draw.circle(screen, (193, 193, 200), (int(550), 223), 3, 0)
-            pygame.display.update()
-
-        frame += 1
+        # if frame >= 10000:
+        #     frame = 0
+        #     for event in pygame.event.get():
+        #         if event.type == pygame.QUIT:
+        #             finished = True
+        #
+        #     screen.fill((0, 0, 0))
+        #
+        #     for num in range(50):
+        #         num_of_point = int(count_of_points / 50 * num)
+        #         right_points[num_of_point].print_point()
+        #     shell.print_shell()
+        #     pygame.draw.circle(screen, (193, 193, 200), (int(550), 223), 3, 0)
+        #     pygame.display.update()
+        #
+        # frame += 1
     print(shell.V)
 
 
