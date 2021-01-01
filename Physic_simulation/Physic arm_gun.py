@@ -29,9 +29,8 @@ class Point_of_gun():
 
         self.V += self.a * dt
         self.L -= self.V * dt
-        # Нулевая точка должна быть закреплена.
 
-    def count_force(self, obj1, obj2):
+    def count_force(self, obj1, obj2, L, k_effect):
         """
         Рассчитывает новые силы, действующие на точку рогатки
         :param obj1: точка ближе к рогатке.
@@ -39,15 +38,12 @@ class Point_of_gun():
         :return: переменные сил сделает новые.
         """
         global k
-        L = 0.1 / count_of_points  # м.
 
-        T1, T2 = force_count_by_numba(obj1.L, obj2.L, self.L, L)
+        T1, T2 = force_count_by_numba(obj1.L, obj2.L, self.L, L, k_effect)
 
         self.a = (T1 - T2) / self.m
         self.T1 = T1
         self.T2 = T2
-
-        # Нужно обработать первую и последнюю точки.
 
     def force_first_point(self, massive):
         """
@@ -80,7 +76,7 @@ class Shell():
         self.a = 0
         self.V = 0
 
-    def move_shell(self, dt):
+    def move_shell(self, dt, count_of_points):
         """Передвигает снаряд"""
         self.a = 2 * right_points[count_of_points - 1].T2 / self.M
         self.V += self.a * dt
@@ -94,8 +90,6 @@ class Shell():
         pygame.draw.circle(screen, (193, 0, 0), (int(550 - self.L * 2500), 223), 3, 0)
 
 
-count_of_points = 20
-delta_time = 1 / 100000000  # с.
 left_points = []
 right_points = []
 k = 10 / 0.1  # Н / м.
@@ -113,6 +107,9 @@ def main(count_of_points, delta_time):
     right_points = []
     frame = 0
     finished = False
+    k_effect = k * count_of_points  # Н/м - Коэфицент упругости резинки для одной точки.
+    L = 0.1 / count_of_points  # м. - расстояние между точками в нерастянутом виде.
+
     # Создадим массив точек рогатки.
     for num in range(count_of_points):
         l = lenght_of_gun / count_of_points * num * 2
@@ -131,19 +128,17 @@ def main(count_of_points, delta_time):
                 right_points[num].force_first_point(right_points)
             elif num == count_of_points - 1:  # Последняя точка взаимодействует со снарядом.
                 # left_points[num].count_force(left_points[num - 1], shell)
-                right_points[num].count_force(right_points[num - 1], shell)
+                right_points[num].count_force(right_points[num - 1], shell, L, k_effect)
             else:
                 # left_points[num].count_force(left_points[num - 1], left_points[num + 1])
-                right_points[num].count_force(right_points[num - 1], right_points[num + 1])
+                right_points[num].count_force(right_points[num - 1], right_points[num + 1], L, k_effect)
+
         # Выполним передвижение точек рогатки.
         for num in range(1, count_of_points):  # Нулевая точка закреплена тем, что отсчет идет с единицы.
             # left_points[num].move_points(delta_time)
             right_points[num].move_points(delta_time)
         # Выполним передвижние снаряда.
-        shell.move_shell(delta_time)
-        print(right_points[count_of_points - 1].T2)
-        print('скорость' + str(shell.V))
-        print(right_points[count_of_points - 1].V)
+        shell.move_shell(delta_time, count_of_points)
 
         if frame >= 10000:
             frame = 0
@@ -163,9 +158,6 @@ def main(count_of_points, delta_time):
         frame += 1
     print(shell.V)
 
-    # Надо решить проблему со знаками сил точек.
-    # Надо решить проблему со знаками в движении снаряда. и у частиц тоже.
-
 
 def circle():
     """
@@ -179,53 +171,19 @@ def circle():
     # Зададим период времени, за который происходят малые перемещения.
     start_delta_time = 1 / 10**4
     step_of_delta_time = 1
-    finish_delta_time = start_delta_time / 10**(step_of_delta_time * 3)
+    count_of_delta_times = 4
+    finish_delta_time = start_delta_time / 10**(step_of_delta_time * (count_of_delta_times - 1))
 
     for num_of_count in range((finish_count - start_count) // step_of_count + 1):
         _count_of_points = start_count + num_of_count * step_of_count
         print("Количество точек: " + str(_count_of_points))
-        print(finish_delta_time)
-        print((finish_delta_time / start_delta_time) / 10**step_of_delta_time)
-        for time in range(int((finish_delta_time / start_delta_time) / 10**step_of_delta_time)):
-
-            print((start_delta_time / finish_delta_time) / 10**step_of_delta_time)
-
-
-def test_first_force():
-    l = lenght_of_gun / count_of_points * 2
-    dm = weight_of_gun / count_of_points
-    # left_points.append(Point_of_gun(l, dm))
-    right_points.append(Point_of_gun(0, dm))
-    right_points.append(Point_of_gun(-l, dm))
-    right_points[0].force_first_point(right_points)
-    print(right_points[0].T2)
-
-
-def test_count_force():
-    l = lenght_of_gun / count_of_points * 2
-    dm = weight_of_gun / count_of_points
-    # left_points.append(Point_of_gun(l, dm))
-    right_points.append(Point_of_gun(0, dm))
-    right_points.append(Point_of_gun(l, dm))
-    right_points.append(Point_of_gun(2*l, dm))
-    right_points[1].count_force(right_points[0], right_points[2])
-    print(right_points[1].T1)
-    print(right_points[1].T2)
-    print(right_points[1].a)
-
-
-def test_mover():
-    l = lenght_of_gun / count_of_points * 2
-    dm = weight_of_gun / count_of_points
-    # left_points.append(Point_of_gun(l, dm))
-    right_points.append(Point_of_gun(0, dm))
-    right_points[0].a = 1
-    right_points[0].move_points(1)
-    print(right_points[0].L)
+        for num_of_time in range(count_of_delta_times):
+            _delta_time = start_delta_time / 10**num_of_time
+            main(_count_of_points, _delta_time)
 
 
 @njit(fastmath=True, cache=True)
-def force_count_by_numba(obj1_L, obj2_L, self_L, L):
+def force_count_by_numba(obj1_L, obj2_L, self_L, L, k_effect):
     """
     Это функция подсчета силы, действующей на точку резинки.
     Она ускорена припомощи Numba.
@@ -235,16 +193,16 @@ def force_count_by_numba(obj1_L, obj2_L, self_L, L):
     :param L: расстояние между соседнии точками в не растянутом состоянии.
     """
     if self_L - obj1_L > L:
-        T1 = k * count_of_points * ((self_L - obj1_L) - L)
+        T1 = k_effect * ((self_L - obj1_L) - L)
     elif obj1_L - self_L > L:
-        T1 = k * count_of_points * ((self_L - obj1_L) + L)
+        T1 = k_effect * ((self_L - obj1_L) + L)
     else:
         T1 = 0
 
     if obj2_L - self_L > L:
-        T2 = k * count_of_points * ((obj2_L - self_L) - L)
+        T2 = k_effect * ((obj2_L - self_L) - L)
     elif self_L - obj2_L > L:
-        T2 = k * count_of_points * ((obj2_L - self_L) + L)
+        T2 = k_effect * ((obj2_L - self_L) + L)
     else:
         T2 = 0
 
@@ -252,10 +210,7 @@ def force_count_by_numba(obj1_L, obj2_L, self_L, L):
 
 
 if __name__ == '__main__':
-    t = time.time()
+    time_of_start = time.time()
     #main(20, 1 / 10000)
-    print("Время работы: " + str(time.time() - t))
     circle()
-    # test_first_force()
-    # test_count_force()
-    # test_mover()
+    print("Время работы: " + str(time.time() - time_of_start))
