@@ -1,6 +1,7 @@
-import tkinter
 import pygame
 import numba
+from numba import njit
+import time
 
 
 pygame.init()  # Инициализация Pygame.
@@ -40,19 +41,7 @@ class Point_of_gun():
         global k
         L = 0.1 / count_of_points  # м.
 
-        if self.L - obj1.L > L:  # Нужно занести в общую функцию под NUMBA!.
-            T1 = k * count_of_points * ((self.L - obj1.L) - L)
-        elif obj1.L - self.L > L:
-            T1 = k * count_of_points * ((self.L - obj1.L) + L)
-        else:
-            T1 = 0
-
-        if obj2.L - self.L > L:  # Нужно занести в общую функцию под NUMBA!.
-            T2 = k * count_of_points * ((obj2.L - self.L) - L)
-        elif self.L - obj2.L > L:
-            T2 = k * count_of_points * ((obj2.L - self.L) + L)
-        else:
-            T2 = 0
+        T1, T2 = force_count_by_numba(obj1.L, obj2.L, self.L, L)
 
         self.a = (T1 - T2) / self.m
         self.T1 = T1
@@ -66,13 +55,14 @@ class Point_of_gun():
         :param massive: Массив точек рогатки.
         :return: None
         """
-        L = 0.1 / count_of_points  # м.
-        if massive[1].L - L > 0:
-            self.T2 = k * (massive[1].L - L) * count_of_points
-        elif L + massive[1].L < 0:
-            self.T2 = k * (massive[1].L + L) * count_of_points
-        else:
-            self.T2 = 0
+        # L = 0.1 / count_of_points  # м.
+        # if massive[1].L - L > 0:
+        #     self.T2 = k * (massive[1].L - L) * count_of_points
+        # elif L + massive[1].L < 0:
+        #     self.T2 = k * (massive[1].L + L) * count_of_points
+        # else:
+        #     self.T2 = 0
+        pass
 
     def print_point(self):
         """
@@ -104,19 +94,23 @@ class Shell():
         pygame.draw.circle(screen, (193, 0, 0), (int(550 - self.L * 2500), 223), 3, 0)
 
 
-count_of_points = 10
-delta_time = 1 / 100000000000  # с.
+count_of_points = 20
+delta_time = 1 / 100000000  # с.
 left_points = []
 right_points = []
-lenght_of_gun = 0.10  # м.
-weight_of_gun = 0.0000030  # кг.
 k = 10 / 0.1  # Н / м.
-frame = 0
-finished = False
+lenght_of_gun = 0.10  # м.
+weight_of_gun = 0.030  # кг.
 
 
-def main():
+def main(count_of_points, delta_time):
+    """
+    Эта функция выполняет рассчет скорости, которая будет у снаряда в момент вылета из рогатки.
+    :param count_of_points: количество точек, на которое бьтся резинка рогатки.
+    :param delta_time: время, за которое считаются малые перемещения обьектов.
+    """
     global k
+    right_points = []
     frame = 0
     finished = False
     # Создадим массив точек рогатки.
@@ -173,6 +167,30 @@ def main():
     # Надо решить проблему со знаками в движении снаряда. и у частиц тоже.
 
 
+def circle():
+    """
+    Это функция, которая запускает моделирование с различными параметрами.
+    В качестве параметров выбраны количесво точек резинки и дельта времени.
+    """
+    # Зададим количество точек рогатки.
+    start_count = 10
+    step_of_count = 5
+    finish_count = start_count + step_of_count * 10
+    # Зададим период времени, за который происходят малые перемещения.
+    start_delta_time = 1 / 10**4
+    step_of_delta_time = 1
+    finish_delta_time = start_delta_time / 10**(step_of_delta_time * 3)
+
+    for num_of_count in range((finish_count - start_count) // step_of_count + 1):
+        _count_of_points = start_count + num_of_count * step_of_count
+        print("Количество точек: " + str(_count_of_points))
+        print(finish_delta_time)
+        print((finish_delta_time / start_delta_time) / 10**step_of_delta_time)
+        for time in range(int((finish_delta_time / start_delta_time) / 10**step_of_delta_time)):
+
+            print((start_delta_time / finish_delta_time) / 10**step_of_delta_time)
+
+
 def test_first_force():
     l = lenght_of_gun / count_of_points * 2
     dm = weight_of_gun / count_of_points
@@ -206,8 +224,38 @@ def test_mover():
     print(right_points[0].L)
 
 
+@njit(fastmath=True, cache=True)
+def force_count_by_numba(obj1_L, obj2_L, self_L, L):
+    """
+    Это функция подсчета силы, действующей на точку резинки.
+    Она ускорена припомощи Numba.
+    :param obj1: точка ближе к рогатке.
+    :param obj2: точка далье от рогатки.
+    :param self: обьект, для которого считается сила.
+    :param L: расстояние между соседнии точками в не растянутом состоянии.
+    """
+    if self_L - obj1_L > L:
+        T1 = k * count_of_points * ((self_L - obj1_L) - L)
+    elif obj1_L - self_L > L:
+        T1 = k * count_of_points * ((self_L - obj1_L) + L)
+    else:
+        T1 = 0
+
+    if obj2_L - self_L > L:
+        T2 = k * count_of_points * ((obj2_L - self_L) - L)
+    elif self_L - obj2_L > L:
+        T2 = k * count_of_points * ((obj2_L - self_L) + L)
+    else:
+        T2 = 0
+
+    return T1, T2
+
+
 if __name__ == '__main__':
-    main()
+    t = time.time()
+    #main(20, 1 / 10000)
+    print("Время работы: " + str(time.time() - t))
+    circle()
     # test_first_force()
     # test_count_force()
     # test_mover()
