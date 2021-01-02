@@ -1,5 +1,4 @@
 import pygame
-import numba
 from numba import njit
 import time
 
@@ -78,7 +77,7 @@ class Shell():
 
     def move_shell(self, dt, count_of_points):
         """Передвигает снаряд"""
-        self.a = 2 * right_points[count_of_points - 1].T2 / self.M
+        self.a = right_points[count_of_points - 1].T2 / self.M
         self.V += self.a * dt
         self.L -= self.V * dt
 
@@ -94,7 +93,7 @@ left_points = []
 right_points = []
 k = 10 / 0.1  # Н / м.
 lenght_of_gun = 0.10  # м.
-weight_of_gun = 0.030  # кг.
+weight_of_gun = 0.000000030  # кг.
 
 
 def main(count_of_points, delta_time, visual):
@@ -109,11 +108,11 @@ def main(count_of_points, delta_time, visual):
     finished = False
     k_effect = k * count_of_points  # Н/м - Коэфицент упругости резинки для одной точки.
     L = 0.1 / count_of_points  # м. - расстояние между точками в нерастянутом виде.
+    dm = weight_of_gun / count_of_points  # кг - масса одной точки резинки.
 
     # Создадим массив точек рогатки.
     for num in range(count_of_points):
         l = lenght_of_gun / count_of_points * num * 2
-        dm = weight_of_gun / count_of_points
         # left_points.append(Point_of_gun(l, dm))
         right_points.append(Point_of_gun(l, dm))
     # Создадим снаряд.
@@ -139,7 +138,9 @@ def main(count_of_points, delta_time, visual):
             right_points[num].move_points(delta_time)
         # Выполним передвижние снаряда.
         shell.move_shell(delta_time, count_of_points)
+        print(right_points[count_of_points - 1].T2)
 
+        # Отрисуем процесс, если включена визуализация.
         if visual == True:
             if frame >= 10000:
                 frame = 0
@@ -166,9 +167,9 @@ def circle():
     В качестве параметров выбраны количесво точек резинки и дельта времени.
     """
     # Зададим количество точек рогатки.
-    start_count = 10
-    step_of_count = 5
-    finish_count = start_count + step_of_count * 10
+    start_count = 100
+    step_of_count = 100
+    finish_count = start_count + step_of_count * 9
     # Зададим период времени, за который происходят малые перемещения.
     start_delta_time = 1 / 10**4
     step_of_delta_time = 1
@@ -212,6 +213,6 @@ def force_count_by_numba(obj1_L, obj2_L, self_L, L, k_effect):
 
 if __name__ == '__main__':
     time_of_start = time.time()
-    #main(20, 1 / 10000, True)
-    circle()
+    main(15, 1 / 50000000, True)
+    #circle()
     print("Время работы: " + str(time.time() - time_of_start))
