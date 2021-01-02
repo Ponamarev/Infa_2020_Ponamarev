@@ -97,7 +97,7 @@ lenght_of_gun = 0.10  # м.
 weight_of_gun = 0.030  # кг.
 
 
-def main(count_of_points, delta_time):
+def main(count_of_points, delta_time, visual):
     """
     Эта функция выполняет рассчет скорости, которая будет у снаряда в момент вылета из рогатки.
     :param count_of_points: количество точек, на которое бьтся резинка рогатки.
@@ -140,22 +140,23 @@ def main(count_of_points, delta_time):
         # Выполним передвижние снаряда.
         shell.move_shell(delta_time, count_of_points)
 
-        # if frame >= 10000:
-        #     frame = 0
-        #     for event in pygame.event.get():
-        #         if event.type == pygame.QUIT:
-        #             finished = True
-        #
-        #     screen.fill((0, 0, 0))
-        #
-        #     for num in range(50):
-        #         num_of_point = int(count_of_points / 50 * num)
-        #         right_points[num_of_point].print_point()
-        #     shell.print_shell()
-        #     pygame.draw.circle(screen, (193, 193, 200), (int(550), 223), 3, 0)
-        #     pygame.display.update()
-        #
-        # frame += 1
+        if visual == True:
+            if frame >= 10000:
+                frame = 0
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        finished = True
+
+                screen.fill((0, 0, 0))
+
+                for num in range(50):
+                    num_of_point = int(count_of_points / 50 * num)
+                    right_points[num_of_point].print_point()
+                shell.print_shell()
+                pygame.draw.circle(screen, (193, 193, 200), (int(550), 223), 3, 0)
+                pygame.display.update()
+
+            frame += 1
     print(shell.V)
 
 
@@ -179,7 +180,7 @@ def circle():
         print("Количество точек: " + str(_count_of_points))
         for num_of_time in range(count_of_delta_times):
             _delta_time = start_delta_time / 10**num_of_time
-            main(_count_of_points, _delta_time)
+            main(_count_of_points, _delta_time, False)
 
 
 @njit(fastmath=True, cache=True)
@@ -211,6 +212,6 @@ def force_count_by_numba(obj1_L, obj2_L, self_L, L, k_effect):
 
 if __name__ == '__main__':
     time_of_start = time.time()
-    #main(20, 1 / 10000)
+    #main(20, 1 / 10000, True)
     circle()
     print("Время работы: " + str(time.time() - time_of_start))
