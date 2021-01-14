@@ -44,20 +44,19 @@ class Point_of_gun():
         self.T1 = T1
         self.T2 = T2
 
-    def force_first_point(self, massive):
+    def force_first_point(self, Obj, count_of_points):
         """
         Рассчет силы для первой точки.
-        :param massive: Массив точек рогатки.
+        :param Obj: Обьект, после первой точки рогатки.
         :return: None
         """
-        # L = 0.1 / count_of_points  # м.
-        # if massive[1].L - L > 0:
-        #     self.T2 = k * (massive[1].L - L) * count_of_points
-        # elif L + massive[1].L < 0:
-        #     self.T2 = k * (massive[1].L + L) * count_of_points
-        # else:
-        #     self.T2 = 0
-        pass
+        L = 0.1 / count_of_points  # м.
+        if Obj.L - L > 0:
+            self.T2 = k * (Obj.L - L) * count_of_points
+        elif L + Obj.L < 0:
+            self.T2 = k * (Obj.L + L) * count_of_points
+        else:
+            self.T2 = 0
 
     def print_point(self):
         """
@@ -78,7 +77,8 @@ class Shell():
     def move_shell(self, dt, count_of_points):
         """Передвигает снаряд"""
         self.a = right_points[count_of_points - 1].T2 / self.M
-        self.V += self.a * dt
+        if self.a > 0:
+            self.V += self.a * dt
         self.L -= self.V * dt
 
     def print_shell(self):
@@ -93,7 +93,7 @@ left_points = []
 right_points = []
 k = 10 / 0.1  # Н / м.
 lenght_of_gun = 0.10  # м.
-weight_of_gun = 0.000000030  # кг.
+weight_of_gun = 0.030  # кг.
 
 
 def main(count_of_points, delta_time, visual):
@@ -124,7 +124,10 @@ def main(count_of_points, delta_time, visual):
         for num in range(count_of_points):
             if num == 0:  # Первая точка не взаимодествует с точками ближе к рогатке, чем она.
                 # left_points[num].force_first_point(left_points)
-                right_points[num].force_first_point(right_points)
+                if len(right_points) > 1:
+                    right_points[num].force_first_point(right_points[1], count_of_points)
+                else:
+                    right_points[num].force_first_point(shell, count_of_points)
             elif num == count_of_points - 1:  # Последняя точка взаимодействует со снарядом.
                 # left_points[num].count_force(left_points[num - 1], shell)
                 right_points[num].count_force(right_points[num - 1], shell, L, k_effect)
@@ -138,7 +141,6 @@ def main(count_of_points, delta_time, visual):
             right_points[num].move_points(delta_time)
         # Выполним передвижние снаряда.
         shell.move_shell(delta_time, count_of_points)
-        print(right_points[count_of_points - 1].T2)
 
         # Отрисуем процесс, если включена визуализация.
         if visual == True:
@@ -169,11 +171,11 @@ def circle():
     # Зададим количество точек рогатки.
     start_count = 100
     step_of_count = 100
-    finish_count = start_count + step_of_count * 9
+    finish_count = start_count + step_of_count * 0
     # Зададим период времени, за который происходят малые перемещения.
-    start_delta_time = 1 / 10**4
+    start_delta_time = 1 / 10**5
     step_of_delta_time = 1
-    count_of_delta_times = 4
+    count_of_delta_times = 3
     finish_delta_time = start_delta_time / 10**(step_of_delta_time * (count_of_delta_times - 1))
 
     for num_of_count in range((finish_count - start_count) // step_of_count + 1):
@@ -207,12 +209,12 @@ def force_count_by_numba(obj1_L, obj2_L, self_L, L, k_effect):
         T2 = k_effect * ((obj2_L - self_L) + L)
     else:
         T2 = 0
-
     return T1, T2
 
 
 if __name__ == '__main__':
     time_of_start = time.time()
-    main(15, 1 / 50000000, True)
-    #circle()
+    main(20, 1 / 10000000, True)
+    # main(1000, 1 / 100000, True)
+    # circle()
     print("Время работы: " + str(time.time() - time_of_start))
